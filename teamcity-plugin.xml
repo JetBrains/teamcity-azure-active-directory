@@ -2,15 +2,15 @@
 <teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
   <info>
     <name>azure-active-directory</name>
-    <display-name>azure-active-directory</display-name>
+    <display-name>Azure Active Directory Support</display-name>
     <version>@Version@</version>
-    <description>Plugin description</description>
+    <description>Support for Microsoft Azure Active Directory (AAD) authentication</description>
     <download-url>Plugin download URL</download-url>
-    <email>Plugin author e-mail</email>
+    <email>evgeniy.koshkin@jetbrains.com</email>
     <vendor>
-      <name>Plugin vendor name</name>
-      <url>Plugin vendor URL</url>
-      <logo>Plugin vendor logo URL</logo>
+      <name>JetBrains, s.r.o.</name>
+      <url>https://www.jetbrains.com/</url>
+      <logo>https://www.jetbrains.com/company/docs/logo_jetbrains.png</logo>
     </vendor>
   </info>
   <deployment use-separate-classloader="true" />
