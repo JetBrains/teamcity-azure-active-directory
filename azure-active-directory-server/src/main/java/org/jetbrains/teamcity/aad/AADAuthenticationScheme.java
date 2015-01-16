@@ -1,23 +1,22 @@
 package org.jetbrains.teamcity.aad;
 
+import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
-import jetbrains.buildServer.serverSide.auth.LoginModuleDescriptorAdapter;
 import org.jetbrains.annotations.NotNull;
-
-import javax.security.auth.spi.LoginModule;
 
 /**
  * @author Evgeniy.Koshkin
  */
-public class AADLoginModuleDescriptor extends LoginModuleDescriptorAdapter {
+public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
-  public AADLoginModuleDescriptor(LoginConfiguration loginConfiguration) {
+  public AADAuthenticationScheme(@NotNull final LoginConfiguration loginConfiguration) {
     loginConfiguration.registerAuthModuleType(this);
   }
 
   @NotNull
-  public String getName() {
-    return "aad";
+  @Override
+  protected String doGetName() {
+    return "AAD";
   }
 
   @NotNull
@@ -30,9 +29,5 @@ public class AADLoginModuleDescriptor extends LoginModuleDescriptorAdapter {
   @Override
   public String getDescription() {
     return "Authentication via Microsoft Azure Active Directory";
-  }
-
-  public Class<? extends LoginModule> getLoginModuleClass() {
-    return AADLoginModule.class;
   }
 }

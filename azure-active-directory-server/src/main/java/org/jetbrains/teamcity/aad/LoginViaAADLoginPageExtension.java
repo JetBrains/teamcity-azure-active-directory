@@ -29,6 +29,6 @@ public class LoginViaAADLoginPageExtension extends SimplePageExtension {
 
   @Override
   public boolean isAvailable(@NotNull HttpServletRequest request) {
-    return !myLoginConfiguration.getConfiguredAuthModules(AADLoginModuleDescriptor.class).isEmpty();
+    return !myLoginConfiguration.getConfiguredAuthModules(AADAuthenticationScheme.class).isEmpty();
   }
 }
