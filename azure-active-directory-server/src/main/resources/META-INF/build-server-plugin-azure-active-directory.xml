@@ -4,4 +4,5 @@
     <bean class="org.jetbrains.teamcity.aad.AADAuthenticationScheme"/>
     <bean class="org.jetbrains.teamcity.aad.LoginViaAADLoginPageExtension"/>
     <bean class="org.jetbrains.teamcity.aad.LoginViaAADController"/>
+    <bean class="org.jetbrains.teamcity.aad.AADAppConfig"/>
 </beans>
