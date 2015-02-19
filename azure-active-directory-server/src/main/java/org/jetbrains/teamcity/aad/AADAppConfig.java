@@ -4,7 +4,7 @@ package org.jetbrains.teamcity.aad;
  * @author Evgeniy.Koshkin
  */
 public class AADAppConfig {
-  public String getOAuthAuthorizationEndpoint() {
+  public String getAppOAuthEndpoint() {
     return "https://login.windows.net/338e019c-f0d6-40a6-9f4d-9c33f4b0fbd3/oauth2/authorize?api-version=1.0";
   }
 

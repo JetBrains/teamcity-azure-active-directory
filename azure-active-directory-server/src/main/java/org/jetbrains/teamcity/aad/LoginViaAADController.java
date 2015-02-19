@@ -31,7 +31,7 @@ public class LoginViaAADController extends BaseController {
   @Override
   protected ModelAndView doHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws Exception {
     final String nonce = SessionUtil.getSessionId(request);
-    final String url = String.format("%s&response_type=id_token&client_id=%s&scope=openid&nonce=%s&response_mode=form_post", myAADAppConfig.getOAuthAuthorizationEndpoint(), myAADAppConfig.getClientId(), nonce);
-    return new ModelAndView(new RedirectView(url));
+    final String requestUrl = AADOpenIdConnect.getRequestUrl(myAADAppConfig.getAppOAuthEndpoint(), myAADAppConfig.getClientId(), nonce);
+    return new ModelAndView(new RedirectView(requestUrl));
   }
 }
