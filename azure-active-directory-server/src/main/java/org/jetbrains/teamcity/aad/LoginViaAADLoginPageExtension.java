@@ -1,6 +1,5 @@
 package org.jetbrains.teamcity.aad;
 
-import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.web.openapi.PagePlaces;
 import jetbrains.buildServer.web.openapi.PlaceId;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
@@ -14,21 +13,21 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class LoginViaAADLoginPageExtension extends SimplePageExtension {
   @NotNull
-  private final LoginConfiguration myLoginConfiguration;
+  private final AADSchemeProperties mySchemeProperties;
 
   public LoginViaAADLoginPageExtension(@NotNull final PagePlaces pagePlaces,
                                        @NotNull final PluginDescriptor pluginDescriptor,
-                                       @NotNull final LoginConfiguration loginConfiguration) {
+                                       @NotNull final AADSchemeProperties schemeProperties) {
     super(pagePlaces,
             PlaceId.LOGIN_PAGE,
             LoginViaAADLoginPageExtension.class.getName(),
             pluginDescriptor.getPluginResourcesPath("loginViaAAD.jsp"));
-    myLoginConfiguration = loginConfiguration;
+    mySchemeProperties = schemeProperties;
     register();
   }
 
   @Override
   public boolean isAvailable(@NotNull HttpServletRequest request) {
-    return !myLoginConfiguration.getConfiguredAuthModules(AADAuthenticationScheme.class).isEmpty();
+    return mySchemeProperties.isSchemeConfigured();
   }
 }

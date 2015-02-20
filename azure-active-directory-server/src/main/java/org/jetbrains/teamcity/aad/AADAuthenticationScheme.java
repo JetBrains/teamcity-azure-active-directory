@@ -3,17 +3,22 @@ package org.jetbrains.teamcity.aad;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
 import jetbrains.buildServer.users.PropertyKey;
+import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.apache.commons.codec.binary.Base64;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -29,7 +34,10 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   private static final String NAME = "name";
   private static final String OVERVIEW_HTML = "/overview.html";
 
-  public AADAuthenticationScheme(@NotNull final LoginConfiguration loginConfiguration) {
+  @NotNull private final PluginDescriptor myPluginDescriptor;
+
+  public AADAuthenticationScheme(@NotNull final LoginConfiguration loginConfiguration, @NotNull final PluginDescriptor pluginDescriptor) {
+    myPluginDescriptor = pluginDescriptor;
     loginConfiguration.registerAuthModuleType(this);
   }
 
@@ -49,6 +57,25 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   @Override
   public String getDescription() {
     return "Authentication via Microsoft Azure Active Directory";
+  }
+
+  @Nullable
+  @Override
+  public String getEditPropertiesJspFilePath() {
+    return myPluginDescriptor.getPluginResourcesPath("editAADSchemeProperties.jsp");
+  }
+
+  @Nullable
+  @Override
+  public Collection<String> validate(@NotNull Map<String, String> properties) {
+    final Collection<String> errors = new ArrayList<String>();
+    if(StringUtil.isEmptyOrSpaces(properties.get(AADSchemePropertiesKeys.AUTH_ENDPOINT_KEY))){
+      errors.add("App OAuth 2.0 authorization endpoint should be specified.");
+    }
+    if(StringUtil.isEmptyOrSpaces(properties.get(AADSchemePropertiesKeys.CLIENT_ID_KEY))){
+      errors.add("Client ID should be specified.");
+    }
+    return errors.isEmpty() ? super.validate(properties) : errors;
   }
 
   @NotNull

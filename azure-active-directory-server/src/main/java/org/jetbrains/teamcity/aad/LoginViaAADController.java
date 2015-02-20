@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginViaAADController extends BaseController {
 
   @NotNull public static final String LOGIN_PATH = "/aadLogin.html";
-  @NotNull private final AADAppConfig myAADAppConfig;
+  @NotNull private final AADSchemeProperties myAADSchemeProperties;
 
   public LoginViaAADController(@NotNull final WebControllerManager webManager,
                                @NotNull final AuthorizationInterceptor authInterceptor,
-                               @NotNull final AADAppConfig aadAppConfig) {
-    myAADAppConfig = aadAppConfig;
+                               @NotNull final AADSchemeProperties aadSchemeProperties) {
+    myAADSchemeProperties = aadSchemeProperties;
     webManager.registerController(LOGIN_PATH, this);
     authInterceptor.addPathNotRequiringAuth(LOGIN_PATH);
   }
@@ -31,7 +31,10 @@ public class LoginViaAADController extends BaseController {
   @Override
   protected ModelAndView doHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws Exception {
     final String nonce = SessionUtil.getSessionId(request);
-    final String requestUrl = AADOpenIdConnect.getRequestUrl(myAADAppConfig.getAppOAuthEndpoint(), myAADAppConfig.getClientId(), nonce);
+    final String appOAuthEndpoint = myAADSchemeProperties.getAppOAuthEndpoint();
+    final String clientId = myAADSchemeProperties.getClientId();
+    if(appOAuthEndpoint == null || clientId == null) return null;
+    final String requestUrl = AADOpenIdConnect.getRequestUrl(appOAuthEndpoint, clientId, nonce);
     return new ModelAndView(new RedirectView(requestUrl));
   }
 }
