@@ -8,7 +8,6 @@ import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationRes
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
-import jetbrains.buildServer.users.PropertyKey;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.apache.commons.codec.binary.Base64;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -29,23 +27,27 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
   private static final String POST_METHOD = "POST";
   private static final String ID_TOKEN = "id_token";
-  private static final String AAD_REALM = "AAD";
+  private static final String JWT_PARTS_DELIMITER = "\\.";
   private static final String NONCE = "nonce";
   private static final String NAME = "name";
-  private static final String JWT_PARTS_DELIMITER = "\\.";
+  private static final String OID = "oid"; //object ID
   private static final String OVERVIEW_HTML = "/overview.html";
 
   @NotNull private final PluginDescriptor myPluginDescriptor;
+  @NotNull private final ServerPrincipalFactory myPrincipalFactory;
 
-  public AADAuthenticationScheme(@NotNull final LoginConfiguration loginConfiguration, @NotNull final PluginDescriptor pluginDescriptor) {
+  public AADAuthenticationScheme(@NotNull final LoginConfiguration loginConfiguration,
+                                 @NotNull final PluginDescriptor pluginDescriptor,
+                                 @NotNull final ServerPrincipalFactory principalFactory) {
     myPluginDescriptor = pluginDescriptor;
+    myPrincipalFactory = principalFactory;
     loginConfiguration.registerAuthModuleType(this);
   }
 
   @NotNull
   @Override
   protected String doGetName() {
-    return "AAD";
+    return AADConstants.AAD_AUTH_SCHEME_NAME;
   }
 
   @NotNull
@@ -70,10 +72,10 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   @Override
   public Collection<String> validate(@NotNull Map<String, String> properties) {
     final Collection<String> errors = new ArrayList<String>();
-    if(StringUtil.isEmptyOrSpaces(properties.get(AADSchemePropertiesKeys.AUTH_ENDPOINT_KEY))){
+    if(StringUtil.isEmptyOrSpaces(properties.get(AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY))){
       errors.add("App OAuth 2.0 authorization endpoint should be specified.");
     }
-    if(StringUtil.isEmptyOrSpaces(properties.get(AADSchemePropertiesKeys.CLIENT_ID_KEY))){
+    if(StringUtil.isEmptyOrSpaces(properties.get(AADConstants.CLIENT_ID_SCHEME_PROPERTY_KEY))){
       errors.add("Client ID should be specified.");
     }
     return errors.isEmpty() ? super.validate(properties) : errors;
@@ -81,7 +83,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
   @NotNull
   @Override
-  public HttpAuthenticationResult processAuthenticationRequest(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Map<String, String> properties) throws IOException {
+  public HttpAuthenticationResult processAuthenticationRequest(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Map<String, String> schemeProperties) throws IOException {
     if (!request.getMethod().equals(POST_METHOD)) return HttpAuthenticationResult.notApplicable();
 
     final String idToken = request.getParameter(ID_TOKEN);
@@ -92,11 +94,12 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
     final JsonElement nonce = jwtPayload.get(NONCE);
     final JsonElement name = jwtPayload.get(NAME);
+    final JsonElement oid = jwtPayload.get(OID);
 
-    if (nonce == null || name == null) return HttpAuthenticationResult.unauthenticated();
+    if (nonce == null || name == null || oid == null) return HttpAuthenticationResult.unauthenticated();
     if(!nonce.getAsString().equals(SessionUtil.getSessionId(request))) return HttpAuthenticationResult.unauthenticated();
 
-    final ServerPrincipal principal = new ServerPrincipal(AAD_REALM, name.getAsString(), null, true, Collections.<PropertyKey, String>emptyMap());
+    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name.getAsString(), oid.getAsString(), schemeProperties);
     return HttpAuthenticationResult.authenticated(principal, true).withRedirect(getUrlForRedirect(request));
   }
 

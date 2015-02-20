@@ -22,13 +22,13 @@ public class AADSchemeProperties {
   @Nullable
   public String getAppOAuthEndpoint() {
     final Map<String, String> properties = getAADSchemeProperties();
-    return properties == null ? null : properties.get(AADSchemePropertiesKeys.AUTH_ENDPOINT_KEY);
+    return properties == null ? null : properties.get(AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY);
   }
 
   @Nullable
   public String getClientId() {
     final Map<String, String> properties = getAADSchemeProperties();
-    return properties == null ? null : properties.get(AADSchemePropertiesKeys.CLIENT_ID_KEY);
+    return properties == null ? null : properties.get(AADConstants.CLIENT_ID_SCHEME_PROPERTY_KEY);
   }
 
   public boolean isSchemeConfigured() {
