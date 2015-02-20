@@ -32,6 +32,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   private static final String AAD_REALM = "AAD";
   private static final String NONCE = "nonce";
   private static final String NAME = "name";
+  private static final String JWT_PARTS_DELIMITER = "\\.";
   private static final String OVERVIEW_HTML = "/overview.html";
 
   @NotNull private final PluginDescriptor myPluginDescriptor;
@@ -86,7 +87,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     final String idToken = request.getParameter(ID_TOKEN);
     if(idToken == null) return HttpAuthenticationResult.notApplicable();
 
-    final String[] jwtParts = idToken.split("\\.");
+    final String[] jwtParts = idToken.split(JWT_PARTS_DELIMITER);
     final JsonObject jwtPayload = new JsonParser().parse(new String(Base64.decodeBase64(jwtParts[1].getBytes()))).getAsJsonObject();
 
     final JsonElement nonce = jwtPayload.get(NONCE);
@@ -96,7 +97,12 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     if(!nonce.getAsString().equals(SessionUtil.getSessionId(request))) return HttpAuthenticationResult.unauthenticated();
 
     final ServerPrincipal principal = new ServerPrincipal(AAD_REALM, name.getAsString(), null, true, Collections.<PropertyKey, String>emptyMap());
+    return HttpAuthenticationResult.authenticated(principal, true).withRedirect(getUrlForRedirect(request));
+  }
 
-    return HttpAuthenticationResult.authenticated(principal, true).withRedirect(OVERVIEW_HTML);
+  @NotNull
+  private static String getUrlForRedirect(@NotNull final HttpServletRequest request) {
+    final String url = SessionUtil.readAndForgetInitialRequestUrl(request);
+    return url != null ? url : request.getContextPath() + OVERVIEW_HTML;
   }
 }
