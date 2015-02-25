@@ -1,10 +1,10 @@
 
- TeamCity plugin which supports authentication via Microsoft Azure Active Directory
+ TeamCity plugin which supports authentication via Microsoft Azure Active Directory. 
+ Compatible with TeamCity server 8.1+.
 
-<a href="https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi&guest=1">
-<img src="https://teamcity.jetbrains.com/app/rest/builds/buildType:(id:TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi)/statusIcon"/>
-</a>
-
+[Build on public CI server.](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPluugi)
+ 
+ 
  1. Build
  Issue 'mvn package' command from the root project to build your plugin. Resulting package <artifactId>.zip will be placed in 'target' directory. 
  
