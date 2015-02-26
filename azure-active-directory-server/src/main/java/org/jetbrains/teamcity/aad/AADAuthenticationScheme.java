@@ -1,15 +1,12 @@
 package org.jetbrains.teamcity.aad;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
-import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,12 +22,13 @@ import java.util.Map;
  */
 public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
+  private static final Logger LOG = Logger.getLogger(AADAuthenticationScheme.class);
+
   private static final String POST_METHOD = "POST";
   private static final String ID_TOKEN = "id_token";
-  private static final String JWT_PARTS_DELIMITER = "\\.";
-  private static final String NONCE = "nonce";
-  private static final String NAME = "name";
-  private static final String OID = "oid"; //object ID
+  private static final String NONCE_CLAIM = "nonce";
+  private static final String NAME_CLAIM = "name";
+  private static final String OID_CLAIM = "oid"; //object ID
   private static final String OVERVIEW_HTML = "/overview.html";
 
   @NotNull private final PluginDescriptor myPluginDescriptor;
@@ -86,20 +84,32 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   public HttpAuthenticationResult processAuthenticationRequest(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Map<String, String> schemeProperties) throws IOException {
     if (!request.getMethod().equals(POST_METHOD)) return HttpAuthenticationResult.notApplicable();
 
-    final String idToken = request.getParameter(ID_TOKEN);
-    if(idToken == null) return HttpAuthenticationResult.notApplicable();
+    final String idTokenString = request.getParameter(ID_TOKEN);
+    if(idTokenString == null){
+      LOG.debug("POST request contains no " + ID_TOKEN + " parameter so scheme is not applicable.");
+      return HttpAuthenticationResult.notApplicable();
+    }
 
-    final String[] jwtParts = idToken.split(JWT_PARTS_DELIMITER);
-    final JsonObject jwtPayload = new JsonParser().parse(new String(Base64.decodeBase64(jwtParts[1].getBytes()))).getAsJsonObject();
+    final JWT token = JWT.parse(idTokenString);
+    if(token == null){
+      LOG.warn(String.format("Marked request as unauthenticated since failed to parse JWT from retrieved %s %s", ID_TOKEN, idTokenString));
+      return HttpAuthenticationResult.unauthenticated();
+    }
 
-    final JsonElement nonce = jwtPayload.get(NONCE);
-    final JsonElement name = jwtPayload.get(NAME);
-    final JsonElement oid = jwtPayload.get(OID);
+    final String nonce = token.getClaim(NONCE_CLAIM);
+    final String name = token.getClaim(NAME_CLAIM);
+    final String oid = token.getClaim(OID_CLAIM);
 
-    if (nonce == null || name == null || oid == null) return HttpAuthenticationResult.unauthenticated();
-    if(!nonce.getAsString().equals(SessionUtil.getSessionId(request))) return HttpAuthenticationResult.unauthenticated();
+    if (nonce == null || name == null || oid == null) {
+      LOG.warn(String.format("Some of required claims were not found in parsed JWT. nonce - %s; name - %s, oid - %s", nonce, name, oid));
+      return HttpAuthenticationResult.unauthenticated();
+    }
+    if(!nonce.equals(SessionUtil.getSessionId(request))) {
+      LOG.warn("Marked request as unauthenticated since retrieved JWT 'nonce' claim doesn't correspond to current TeamCity session.");
+      return HttpAuthenticationResult.unauthenticated();
+    }
 
-    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name.getAsString(), oid.getAsString(), schemeProperties);
+    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, schemeProperties);
     return HttpAuthenticationResult.authenticated(principal, true).withRedirect(getUrlForRedirect(request));
   }
 
