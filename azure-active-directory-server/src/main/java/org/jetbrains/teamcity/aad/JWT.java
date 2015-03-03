@@ -55,6 +55,7 @@ public class JWT {
 
   @Nullable
   public String getClaim(@NotNull String claimName){
-    return myContent.get(claimName).getAsString();
+    final JsonElement jsonElement = myContent.get(claimName);
+    return jsonElement == null ? null : jsonElement.getAsString();
   }
 }
