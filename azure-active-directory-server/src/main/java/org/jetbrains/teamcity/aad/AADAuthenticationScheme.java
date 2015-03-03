@@ -1,20 +1,24 @@
 package org.jetbrains.teamcity.aad;
 
 import com.intellij.openapi.util.text.StringUtil;
+import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationProtocol;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
+import jetbrains.buildServer.controllers.interceptors.auth.util.HttpAuthUtil;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -29,7 +33,8 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   private static final String NONCE_CLAIM = "nonce";
   private static final String NAME_CLAIM = "name";
   private static final String OID_CLAIM = "oid"; //object ID
-  private static final String OVERVIEW_HTML = "/overview.html";
+  private static final String ERROR_CLAIM = "error";
+  private static final String ERROR_DESCRIPTION_CLAIM = "error_description";
 
   @NotNull private final PluginDescriptor myPluginDescriptor;
   @NotNull private final ServerPrincipalFactory myPrincipalFactory;
@@ -91,31 +96,37 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     }
 
     final JWT token = JWT.parse(idTokenString);
-    if(token == null){
-      LOG.warn(String.format("Marked request as unauthenticated since failed to parse JWT from retrieved %s %s", ID_TOKEN, idTokenString));
-      return HttpAuthenticationResult.unauthenticated();
-    }
+    if(token == null)
+      return sendBadRequest(response, String.format("Marked request as unauthenticated since failed to parse JWT from retrieved %s %s", ID_TOKEN, idTokenString));
 
     final String nonce = token.getClaim(NONCE_CLAIM);
     final String name = token.getClaim(NAME_CLAIM);
     final String oid = token.getClaim(OID_CLAIM);
+    final String error = token.getClaim(ERROR_CLAIM);
+    final String errorDescription = token.getClaim(ERROR_DESCRIPTION_CLAIM);
 
-    if (nonce == null || name == null || oid == null) {
-      LOG.warn(String.format("Some of required claims were not found in parsed JWT. nonce - %s; name - %s, oid - %s", nonce, name, oid));
-      return HttpAuthenticationResult.unauthenticated();
+    if(error != null){
+      LOG.warn(error);
+      return sendUnauthorized(request, response, errorDescription);
     }
-    if(!nonce.equals(SessionUtil.getSessionId(request))) {
-      LOG.warn("Marked request as unauthenticated since retrieved JWT 'nonce' claim doesn't correspond to current TeamCity session.");
-      return HttpAuthenticationResult.unauthenticated();
-    }
+
+    if (nonce == null || name == null || oid == null)
+      return sendBadRequest(response, String.format("Some of required claims were not found in parsed JWT. nonce - %s; name - %s, oid - %s", nonce, name, oid));
+
+    if(!nonce.equals(SessionUtil.getSessionId(request)))
+      return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim doesn't correspond to current TeamCity session.");
 
     final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, schemeProperties);
-    return HttpAuthenticationResult.authenticated(principal, true).withRedirect(getUrlForRedirect(request));
+    return HttpAuthenticationResult.authenticated(principal, true);
   }
 
-  @NotNull
-  private static String getUrlForRedirect(@NotNull final HttpServletRequest request) {
-    final String url = SessionUtil.readAndForgetInitialRequestUrl(request);
-    return url != null ? url : request.getContextPath() + OVERVIEW_HTML;
+  private HttpAuthenticationResult sendUnauthorized(HttpServletRequest request, HttpServletResponse response, String reason) throws IOException {
+    return HttpAuthUtil.sendUnauthorized(request, response, reason, Collections.<HttpAuthenticationProtocol>emptySet());
+  }
+
+  private HttpAuthenticationResult sendBadRequest(HttpServletResponse response, String reason) throws IOException {
+    LOG.warn(reason);
+    response.sendError(HttpStatus.BAD_REQUEST.value(), reason);
+    return HttpAuthenticationResult.unauthenticated();
   }
 }
