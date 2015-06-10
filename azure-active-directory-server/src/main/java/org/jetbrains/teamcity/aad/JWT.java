@@ -35,7 +35,7 @@ public class JWT {
       LOG.warn(String.format("JWT is malformed since consist of %d parts instead of required 3.", jwtParts.length));
       return null;
     }
-    final String jwsPayload = jwtParts[1];
+    final String jwsPayload = addPadding(jwtParts[1]);
     final JsonElement jsonElement;
     try {
       final byte[] jwsPayloadBytes = jwsPayload.getBytes(UTF8);
@@ -51,6 +51,18 @@ public class JWT {
       return null;
     }
     return new JWT(jsonElement.getAsJsonObject());
+  }
+
+  private static String addPadding(String base64EncodedString) {
+    int numCharsToPad = base64EncodedString.length() % 4;
+    if (numCharsToPad  == 0) {
+      return base64EncodedString;
+    }
+      StringBuffer buf = new StringBuffer(base64EncodedString);
+      for(int i = 0; i < numCharsToPad; i++) {
+        buf.append('=');
+      }
+    return buf.toString();
   }
 
   @Nullable
