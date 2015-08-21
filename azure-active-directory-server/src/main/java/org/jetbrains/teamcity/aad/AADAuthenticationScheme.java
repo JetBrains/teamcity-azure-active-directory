@@ -33,6 +33,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   private static final String NONCE_CLAIM = "nonce";
   private static final String NAME_CLAIM = "name";
   private static final String OID_CLAIM = "oid"; //object ID
+  private static final String EMAIL_CLAIM = "email";
   private static final String ERROR_CLAIM = "error";
   private static final String ERROR_DESCRIPTION_CLAIM = "error_description";
 
@@ -99,9 +100,6 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     if(token == null)
       return sendBadRequest(response, String.format("Marked request as unauthenticated since failed to parse JWT from retrieved %s %s", ID_TOKEN, idTokenString));
 
-    final String nonce = token.getClaim(NONCE_CLAIM);
-    final String name = token.getClaim(NAME_CLAIM);
-    final String oid = token.getClaim(OID_CLAIM);
     final String error = token.getClaim(ERROR_CLAIM);
     final String errorDescription = token.getClaim(ERROR_DESCRIPTION_CLAIM);
 
@@ -110,13 +108,19 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
       return sendUnauthorized(request, response, errorDescription);
     }
 
+    final String nonce = token.getClaim(NONCE_CLAIM);
+    final String name = token.getClaim(NAME_CLAIM);
+    final String oid = token.getClaim(OID_CLAIM);
+
     if (nonce == null || name == null || oid == null)
       return sendBadRequest(response, String.format("Some of required claims were not found in parsed JWT. nonce - %s; name - %s, oid - %s", nonce, name, oid));
 
     if(!nonce.equals(SessionUtil.getSessionId(request)))
       return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim doesn't correspond to current TeamCity session.");
 
-    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, schemeProperties);
+    final String email = token.getClaim(EMAIL_CLAIM);
+
+    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
     return HttpAuthenticationResult.authenticated(principal, true);
   }
 

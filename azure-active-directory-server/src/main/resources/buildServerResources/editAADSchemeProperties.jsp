@@ -4,6 +4,11 @@
 <div><jsp:include page="/admin/allowCreatingNewUsersByLogin.jsp"/></div>
 <br/>
 <div>
+    <prop:checkboxProperty name="allowMatchingUsersByEmail" uncheckedValue="false"/>
+    <label width="100%" for="allowMatchingUsersByEmail">Allow matching users by Email</label>
+</div>
+<br/>
+<div>
     <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY%>">App OAuth 2.0 authorization endpoint:</label><br/>
     <prop:textProperty style="width: 100%;" name="<%=org.jetbrains.teamcity.aad.AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY%>"/><br/>
     <span class="grayNote">Endpoint at which TeamCity server can obtain an authorization token using OAuth 2.0.</span>
