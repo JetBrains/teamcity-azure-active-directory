@@ -27,6 +27,14 @@ Specify valid 'App OAuth 2.0 authorization endpoint' and 'Client ID' retrieved f
 
 Use 'Log in using Azure Active Directory' link available on Login page to login via your Azure Active Directory account.
 
+# How it works?
+
+This authentication scheme works as following:
+- it receives UID, email, username of AD user from specified AD
+- looks for already added TeamCity user for received UID, if found authenticate this TeamCity user
+- if allowed by scheme options tries find TeamCity user by given e-mail
+- if user is not found and user creation is allowed, new TeamCity user is created, some user like email are setted for newly created TeamCity user
+
 # Plugin development
 
 ## Building plugin from sources
