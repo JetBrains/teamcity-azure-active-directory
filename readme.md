@@ -48,5 +48,5 @@ To install the plugin, put zip archive to 'plugins' dir under TeamCity data dire
 # Feedback
 
 Please submit your questions/bugs/feature requests [here](https://github.com/ekoshkin/teamcity-azure-active-directory/issues)
-
+This is not a bundled plugin, please do not use TeamCity official feedback channels to provide feedback for this plugin.
  
