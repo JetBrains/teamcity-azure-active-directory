@@ -31,9 +31,9 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   private static final String POST_METHOD = "POST";
   private static final String ID_TOKEN = "id_token";
   private static final String NONCE_CLAIM = "nonce";
-  private static final String NAME_CLAIM = "name";
+  private static final String NAME_CLAIM = "unique_name";
   private static final String OID_CLAIM = "oid"; //object ID
-  private static final String EMAIL_CLAIM = "email";
+  private static final String EMAIL_CLAIM = "upn";
   private static final String ERROR_CLAIM = "error";
   private static final String ERROR_DESCRIPTION_CLAIM = "error_description";
 
