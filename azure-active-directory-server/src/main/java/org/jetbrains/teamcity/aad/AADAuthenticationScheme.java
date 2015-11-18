@@ -121,6 +121,8 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     final String email = token.getClaim(EMAIL_CLAIM);
 
     final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
+
+    LOG.debug("Request authenticated. Determined user " + principal.getName());
     return HttpAuthenticationResult.authenticated(principal, true);
   }
 
