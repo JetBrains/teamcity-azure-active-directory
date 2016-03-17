@@ -55,7 +55,7 @@ public class ServerPrincipalFactory {
   @Nullable
   private SUser findExistingUserByEmail(@NotNull String email) {
     for(SUser user : myUserModel.getAllUsers().getUsers()){
-     if(user.getEmail().equalsIgnoreCase(email)) return user;
+      if(email.equalsIgnoreCase(user.getEmail())) return user;
     }
     return null;
   }
