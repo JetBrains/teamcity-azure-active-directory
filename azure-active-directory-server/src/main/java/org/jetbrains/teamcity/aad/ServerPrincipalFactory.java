@@ -49,7 +49,7 @@ public class ServerPrincipalFactory {
     final HashMap<PropertyKey, String> userProperties = new HashMap<PropertyKey, String>() {{
       put(AADConstants.OID_USER_PROPERTY_KEY, aadUserUID);
     }};
-    return allowCreatingNewUsersByLogin ? new ServerPrincipal(AADConstants.AAD_AUTH_SCHEME_NAME, userName, null, allowCreatingNewUsersByLogin, userProperties) : null;
+    return new ServerPrincipal(AADConstants.AAD_AUTH_SCHEME_NAME, userName, null, allowCreatingNewUsersByLogin, userProperties);
   }
 
   @Nullable

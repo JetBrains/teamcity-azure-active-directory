@@ -5,7 +5,6 @@ import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationPro
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
 import jetbrains.buildServer.controllers.interceptors.auth.util.HttpAuthUtil;
-import jetbrains.buildServer.serverSide.auth.AuthModuleUtil;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
@@ -122,12 +121,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     final String email = token.getClaim(EMAIL_CLAIM);
 
     final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
-   
-    if(principal == null)
-	{
-		return sendUnauthorized(request, response, String.format("User not found for %s: %s", email != null? "email" : "name", email != null? email : name));
-	}
-    
+
     LOG.debug("Request authenticated. Determined user " + principal.getName());
     return HttpAuthenticationResult.authenticated(principal, true);
   }
