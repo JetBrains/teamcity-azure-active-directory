@@ -122,12 +122,13 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     final String email = token.getClaim(EMAIL_CLAIM);
 
     final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
-    LOG.debug("Request authenticated. Determined user " + principal.getName());
-    if(principal.getUsernamePropertyKey() == null && !AuthModuleUtil.allowCreatingNewUsersByLogin(schemeProperties, true))
+   
+    if(principal == null)
 	{
-		return sendUnauthorized(request, response, String.format("User not found for %s: %s", email != null? "email" : "name", email != null? email : principal.getName()));
+		return sendUnauthorized(request, response, String.format("User not found for %s: %s", email != null? "email" : "name", email != null? email : name));
 	}
     
+    LOG.debug("Request authenticated. Determined user " + principal.getName());
     return HttpAuthenticationResult.authenticated(principal, true);
   }
 
