@@ -123,7 +123,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
 
     LOG.debug("Request authenticated. Determined user " + principal.getName());
-    return HttpAuthenticationResult.authenticated(principal, true);
+    return HttpAuthenticationResult.authenticated(principal, HttpAuthRememberMeUtil.mustRememberMe());
   }
 
   private HttpAuthenticationResult sendUnauthorized(HttpServletRequest request, HttpServletResponse response, String reason) throws IOException {
