@@ -19,3 +19,9 @@
     <prop:textProperty style="width: 100%;" name="<%=org.jetbrains.teamcity.aad.AADConstants.CLIENT_ID_SCHEME_PROPERTY_KEY%>"/><br/>
     <span class="grayNote">The unique Azure Active Directory application identifier of this TeamCity server.</span>
 </div>
+<br/>
+<div>
+    <prop:checkboxProperty name="<%=org.jetbrains.teamcity.aad.AADConstants.DISABLE_LOGIN_FORM%>" uncheckedValue="false"/>
+    <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.DISABLE_LOGIN_FORM%>">Hide login form</label><br/>
+    <span class="grayNote">Hide user/password login form on Teamcity login page.</span>
+</div>

@@ -31,6 +31,11 @@ public class AADSchemeProperties {
     return properties == null ? null : properties.get(AADConstants.CLIENT_ID_SCHEME_PROPERTY_KEY);
   }
 
+  public Boolean getDisableLoginForm() {
+    final Map<String, String> properties = getAADSchemeProperties();
+    return properties != null &&  Boolean.valueOf(properties.get(AADConstants.DISABLE_LOGIN_FORM));
+  }
+  
   public boolean isSchemeConfigured() {
     return !myLoginConfiguration.getConfiguredAuthModules(AADAuthenticationScheme.class).isEmpty();
   }
