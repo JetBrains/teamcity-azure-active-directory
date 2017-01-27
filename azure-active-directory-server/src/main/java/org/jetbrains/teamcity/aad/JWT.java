@@ -5,6 +5,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import java.io.UnsupportedEncodingException;
 
@@ -30,6 +31,14 @@ public class JWT {
    */
   @Nullable
   public static JWT parse(@NotNull String jwtString){
+	LOG.debug (String.format("Verifying JWT: %s", jwtString));
+	try {
+		JWTVerifier.Verify(jwtString);
+	} catch (InvalidJwtException e) {
+		LOG.warn("Failed to verify JWT from JWS payload " + jwtString, e);
+	    return null;
+	}
+	
     final String[] jwtParts = jwtString.split(JWT_PARTS_DELIMITER);
     if(jwtParts.length != 3){
       LOG.warn(String.format("JWT is malformed since consist of %d parts instead of required 3.", jwtParts.length));
