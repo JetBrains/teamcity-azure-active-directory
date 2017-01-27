@@ -88,13 +88,13 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   @NotNull
   @Override
   public HttpAuthenticationResult processAuthenticationRequest(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Map<String, String> schemeProperties) throws IOException {
-    if (!request.getMethod().equals(POST_METHOD)) return HttpAuthenticationResult.notApplicable();
+	
+	final String idTokenString = this.GetToken(request);
 
-    final String idTokenString = request.getParameter(ID_TOKEN);
-    if(idTokenString == null){
-      LOG.debug("POST request contains no " + ID_TOKEN + " parameter so scheme is not applicable.");
-      return HttpAuthenticationResult.notApplicable();
-    }
+	if(idTokenString == null){
+	  LOG.debug("POST request contains no " + ID_TOKEN + " parameter so scheme is not applicable.");
+	  return HttpAuthenticationResult.notApplicable();
+	}
 
     final JWT token = JWT.parse(idTokenString);
     if(token == null)
@@ -126,6 +126,28 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     return HttpAuthenticationResult.authenticated(principal, true);
   }
 
+  private String GetToken(HttpServletRequest request)
+  {
+	final String token = this.FindIdTokenInHeader(request);
+	if(token != null && !token.isEmpty())
+		return token;
+	
+	return this.FindIdTokenInParameters(request);
+  }
+  
+  private String FindIdTokenInHeader(HttpServletRequest request)
+  {
+	return request.getHeader("authorization");
+  }
+  
+  private String FindIdTokenInParameters(HttpServletRequest request)
+  {
+	if (!request.getMethod().equals(POST_METHOD)) 
+		return "";
+	
+	return request.getParameter(ID_TOKEN);	 
+  }
+  
   private HttpAuthenticationResult sendUnauthorized(HttpServletRequest request, HttpServletResponse response, String reason) throws IOException {
     return HttpAuthUtil.sendUnauthorized(request, response, reason, Collections.<HttpAuthenticationProtocol>emptySet());
   }
