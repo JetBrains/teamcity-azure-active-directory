@@ -34,7 +34,8 @@ public class ServerPrincipalFactory {
   public ServerPrincipal getServerPrincipal(@NotNull String userName, @NotNull final String aadUserUID, @Nullable final String email, @NotNull Map<String, String> schemeProperties) {
     
 	final ServerPrincipal existingPrincipal = findExistingPrincipalByUID(aadUserUID);
-    if(existingPrincipal != null) return existingPrincipal;
+    if(existingPrincipal != null) 
+    	return existingPrincipal;
 
     if(email != null && allowMatchUserByEmail(schemeProperties)){
       
@@ -52,6 +53,7 @@ public class ServerPrincipalFactory {
     final HashMap<PropertyKey, String> userProperties = new HashMap<PropertyKey, String>() {{
       put(AADConstants.OID_USER_PROPERTY_KEY, aadUserUID);
     }};
+    
     return allowCreatingNewUsersByLogin ? new ServerPrincipal(AADConstants.AAD_AUTH_SCHEME_NAME, userName, null, allowCreatingNewUsersByLogin, userProperties) : null;
   }
 
