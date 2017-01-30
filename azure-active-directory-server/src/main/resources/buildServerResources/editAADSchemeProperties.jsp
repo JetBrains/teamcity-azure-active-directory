@@ -25,3 +25,9 @@
     <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.DISABLE_LOGIN_FORM%>">Hide login form</label><br/>
     <span class="grayNote">Hide user/password login form on Teamcity login page.</span>
 </div>
+<br/>
+<div>
+    <prop:checkboxProperty name="<%=org.jetbrains.teamcity.aad.AADConstants.ENABLE_TOKEN_AUTHENTICATION%>" uncheckedValue="false"/>
+    <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.ENABLE_TOKEN_AUTHENTICATION%>">Enable token authentication</label><br/>
+    <span class="grayNote">Enable bearer token authentication on HTTP requests for API calls</span>
+</div>

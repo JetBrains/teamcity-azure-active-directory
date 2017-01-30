@@ -40,6 +40,11 @@ public class AADSchemeProperties {
     return !myLoginConfiguration.getConfiguredAuthModules(AADAuthenticationScheme.class).isEmpty();
   }
 
+  public Boolean getEnableTokenAuthentication() {
+    final Map<String, String> properties = getAADSchemeProperties();
+    return properties != null &&  Boolean.valueOf(properties.get(AADConstants.ENABLE_TOKEN_AUTHENTICATION));
+  }
+  
   @Nullable
   private Map<String, String> getAADSchemeProperties() {
     final List<AuthModule<AADAuthenticationScheme>> aadAuthModules = myLoginConfiguration.getConfiguredAuthModules(AADAuthenticationScheme.class);

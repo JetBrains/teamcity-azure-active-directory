@@ -90,10 +90,10 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   @Override
   public HttpAuthenticationResult processAuthenticationRequest(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Map<String, String> schemeProperties) throws IOException {
 	
-	final String idTokenString = this.GetToken(request);
+	final String idTokenString = this.GetToken(request, schemeProperties);
 
-	if(idTokenString == null){
-	  LOG.debug("POST request contains no " + ID_TOKEN + " parameter so scheme is not applicable.");
+	if(idTokenString == null || idTokenString.isEmpty()){
+	  LOG.debug("Request contains no " + ID_TOKEN + " parameter or Authorization header so scheme is not applicable.");
 	  return HttpAuthenticationResult.notApplicable();
 	}
 
@@ -132,24 +132,31 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     return HttpAuthenticationResult.authenticated(principal, true);
   }
 
-  private String GetToken(HttpServletRequest request)
+  private String GetToken(HttpServletRequest request, @NotNull Map<String, String> schemeProperties)
   {
-	final String token = this.FindIdTokenInHeader(request);
-	if(token != null && !token.isEmpty())
-		return token;
+	if(Boolean.valueOf(schemeProperties.getOrDefault(AADConstants.ENABLE_TOKEN_AUTHENTICATION, "false")))
+	{
+		final String token = this.FindIdTokenInHeader(request);
+		if(token != null && !token.isEmpty())
+			return token;
+	}
 	
 	return this.FindIdTokenInParameters(request);
   }
   
   private String FindIdTokenInHeader(HttpServletRequest request)
   {
-	return request.getHeader("authorization");
+	final String header = request.getHeader("authorization");
+	if(header == null)
+		return null;
+	
+	return header.substring(7);
   }
   
   private String FindIdTokenInParameters(HttpServletRequest request)
   {
 	if (!request.getMethod().equals(POST_METHOD)) 
-		return "";
+		return null;
 	
 	return request.getParameter(ID_TOKEN);	 
   }

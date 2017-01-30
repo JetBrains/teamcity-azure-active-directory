@@ -32,10 +32,12 @@ public class ServerPrincipalFactory {
 
   @NotNull
   public ServerPrincipal getServerPrincipal(@NotNull String userName, @NotNull final String aadUserUID, @Nullable final String email, @NotNull Map<String, String> schemeProperties) {
-    final ServerPrincipal existingPrincipal = findExistingPrincipalByUID(aadUserUID);
+    
+	final ServerPrincipal existingPrincipal = findExistingPrincipalByUID(aadUserUID);
     if(existingPrincipal != null) return existingPrincipal;
 
     if(email != null && allowMatchUserByEmail(schemeProperties)){
+      
       final SUser userWithTheSameEmail = findExistingUserByEmail(email);
       if(userWithTheSameEmail != null){
         final String username = userWithTheSameEmail.getUsername();
@@ -43,6 +45,7 @@ public class ServerPrincipalFactory {
         userWithTheSameEmail.setUserProperty(AADConstants.OID_USER_PROPERTY_KEY, aadUserUID);
         return new ServerPrincipal(AADConstants.AAD_AUTH_SCHEME_NAME, username);
       }
+      
     }
 
     final boolean allowCreatingNewUsersByLogin = AuthModuleUtil.allowCreatingNewUsersByLogin(schemeProperties, DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN);
