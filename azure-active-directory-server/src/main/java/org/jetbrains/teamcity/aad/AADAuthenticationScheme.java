@@ -67,8 +67,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   @Nullable
   @Override
   public Collection<String> validate(@NotNull Map<String, String> properties) {
-    
-	  final Collection<String> errors = new ArrayList<String>();
+    final Collection<String> errors = new ArrayList<String>();
     if(StringUtil.isEmptyOrSpaces(properties.get(AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY))){
       errors.add("App OAuth 2.0 authorization endpoint should be specified.");
     }
@@ -77,7 +76,7 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     }
     
     if(Boolean.valueOf(properties.get(AADConstants.ENABLE_TOKEN_AUTHENTICATION)) && !Boolean.valueOf(properties.get(AADConstants.ALLOW_MATCHING_USERS_BY_EMAIL))){
-      errors.add("In order to enable token authentication, matching users by email must be enable too.");
+      errors.add("In order to enable token authentication, matching users by email must be enabled too.");
     }
     
     return errors.isEmpty() ? super.validate(properties) : errors;

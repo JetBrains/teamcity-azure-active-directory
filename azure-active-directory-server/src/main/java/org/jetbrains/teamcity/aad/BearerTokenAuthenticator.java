@@ -13,10 +13,6 @@ import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 
 public class BearerTokenAuthenticator extends TokenAuthenticator {
-
-	private static final String OID_CLAIM = "oid"; //object ID
-	private static final String ERROR_CLAIM = "error";
-	private static final String ERROR_DESCRIPTION_CLAIM = "error_description";
 	
 	@NotNull private final PluginDescriptor myPluginDescriptor;
 	@NotNull private final ServerPrincipalFactory myPrincipalFactory;
@@ -41,24 +37,24 @@ public class BearerTokenAuthenticator extends TokenAuthenticator {
 	    if(token == null)
 	      return sendBadRequest(response, String.format("Marked request as unauthenticated since failed to parse JWT from retrieved %s", idTokenString));
 	
-	    final String error = token.getClaim(ERROR_CLAIM);
-	    final String errorDescription = token.getClaim(ERROR_DESCRIPTION_CLAIM);
+	    final String error = token.getClaim(ClaimsConstants.ERROR_CLAIM);
+	    final String errorDescription = token.getClaim(ClaimsConstants.ERROR_DESCRIPTION_CLAIM);
 	
 	    if(error != null){
 	      LOG.warn(error);
 	      return sendUnauthorized(request, response, errorDescription);
 	    }
 	
-	    final String oid = token.getClaim(OID_CLAIM);
+	    final String oid = token.getClaim(ClaimsConstants.OID_CLAIM);
 	
 	    if (oid == null)
-	      return sendBadRequest(response, "The required claim " + OID_CLAIM + "was not found in parsed JWT");
+	      return sendBadRequest(response, "The required claim " + ClaimsConstants.OID_CLAIM + "was not found in parsed JWT");
 	
 	    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(oid, oid, oid, schemeProperties);
 	   
-	    if(principal == null)
+	    if(principal == null){
 			return sendUnauthorized(request, response, String.format("User with OID %s not found. (Remember to place the OID in the email field)", oid));
-	    
+	    }
 	    LOG.debug("Request authenticated. Determined user " + principal.getName());
 	    return HttpAuthenticationResult.authenticated(principal, true);
 	}

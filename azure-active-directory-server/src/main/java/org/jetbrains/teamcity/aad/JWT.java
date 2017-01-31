@@ -32,28 +32,22 @@ public class JWT {
   @Nullable
   public static JWT parse(@NotNull String jwtString){
 	LOG.debug (String.format("Verifying JWT: %s", jwtString));
-	
 	try {
 		JWTVerifier.Verify(jwtString);
 	} catch (InvalidJwtException e) {
 		LOG.warn("Failed to verify JWT from JWS payload " + jwtString, e);
 	    return null;
 	}
-	
     final String[] jwtParts = jwtString.split(JWT_PARTS_DELIMITER);
     if(jwtParts.length != 3){
       LOG.warn(String.format("JWT is malformed since consist of %d parts instead of required 3.", jwtParts.length));
       return null;
     }
-    
     final String jwsPayload = addPadding(jwtParts[1]);
     final JsonElement jsonElement;
-    
     try {
-    	
       final byte[] jwsPayloadBytes = jwsPayload.getBytes(UTF8);
       jsonElement = new JsonParser().parse(new String(Base64.decodeBase64(jwsPayloadBytes)));
-    
     } catch (JsonSyntaxException e) {
       LOG.warn("Failed to parse JWT from JWS payload " + jwsPayload, e);
       return null;
@@ -64,7 +58,6 @@ public class JWT {
       LOG.warn("Failed to parse JWT from JWS payload " + jwsPayload, e);
       return null;
     }
-    
     return new JWT(jsonElement.getAsJsonObject());
   }
 
