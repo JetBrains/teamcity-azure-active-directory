@@ -21,8 +21,7 @@ public class ServerPrincipalFactory {
 
   private static final Logger LOG = Logger.getLogger(ServerPrincipalFactory.class);
 
-  private static final boolean DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN = true;
-  private static final String ALLOW_MATCHING_USERS_BY_EMAIL = "allowMatchingUsersByEmail";
+  private static final boolean DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN = true;;
 
   @NotNull private final UserModel myUserModel;
 
@@ -77,7 +76,7 @@ public class ServerPrincipalFactory {
   }
 
   private static boolean allowMatchUserByEmail(Map<String, String> schemeProperties) {
-    Object value = schemeProperties.get(ALLOW_MATCHING_USERS_BY_EMAIL);
+    Object value = schemeProperties.get(AADConstants.ALLOW_MATCHING_USERS_BY_EMAIL);
     return value != null && Boolean.parseBoolean((String) value);
   }
 }

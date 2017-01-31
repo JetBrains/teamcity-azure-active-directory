@@ -5,7 +5,7 @@
 <br/>
 <div>
     <prop:checkboxProperty name="allowMatchingUsersByEmail" uncheckedValue="false"/>
-    <label width="100%" for="allowMatchingUsersByEmail">Allow matching users by Email</label>
+    <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.ALLOW_MATCHING_USERS_BY_EMAIL%>">Allow matching users by Email</label>
 </div>
 <br/>
 <div>

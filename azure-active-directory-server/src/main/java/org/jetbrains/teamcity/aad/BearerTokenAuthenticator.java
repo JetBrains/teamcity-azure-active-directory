@@ -57,7 +57,7 @@ public class BearerTokenAuthenticator extends TokenAuthenticator {
 	    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(oid, oid, oid, schemeProperties);
 	   
 	    if(principal == null)
-			return sendUnauthorized(request, response, String.format("User with email %s not found", oid));
+			return sendUnauthorized(request, response, String.format("User with OID %s not found. (Remember to place the OID in the email field)", oid));
 	    
 	    LOG.debug("Request authenticated. Determined user " + principal.getName());
 	    return HttpAuthenticationResult.authenticated(principal, true);
