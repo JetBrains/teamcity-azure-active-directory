@@ -61,9 +61,6 @@ public class AADLoginTokenAuthenticatior extends TokenAuthenticator {
 	
 	    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
 	   
-	    if(principal == null) {
-			return sendUnauthorized(request, response, String.format("User not found for %s: %s", email != null? "email" : "name", email != null? email : name));
-	    }
 	    LOG.debug("Request authenticated. Determined user " + principal.getName());
 	    return HttpAuthenticationResult.authenticated(principal, true);
 	}
