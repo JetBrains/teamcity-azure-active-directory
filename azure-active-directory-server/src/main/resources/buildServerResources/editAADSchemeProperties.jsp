@@ -38,7 +38,8 @@
     	<prop:option value="<%=org.jetbrains.teamcity.aad.ClaimsConstants.APPID_CLAIM%>">Application ID</prop:option>
     	<prop:option value="<%=org.jetbrains.teamcity.aad.ClaimsConstants.OID_CLAIM%>">Object Id</prop:option>
     </prop:selectProperty>
-    <span class="grayNote">The claim that will be used for matching the bearer token with a TeamCity user.</span>
+    </br>
+    <span class="grayNote">The claim that will be used for matching the bearer token with a TeamCity user's email field.</span>
 </div>
 
 <script type="text/javascript">
