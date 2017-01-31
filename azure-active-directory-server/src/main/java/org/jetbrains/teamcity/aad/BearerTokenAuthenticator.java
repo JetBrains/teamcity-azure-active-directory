@@ -31,6 +31,7 @@ public class BearerTokenAuthenticator extends TokenAuthenticator {
 	@Override
 	public HttpAuthenticationResult processAuthenticationRequest(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws IOException {
 		
+		final String claimName = schemeProperties.get(AADConstants.ID_CLAIM_TOKEN_AUTHENTICATION);
 		final String idTokenString = this.GetToken(request);
 	
 	    final JWT token = JWT.parse(idTokenString);
@@ -45,10 +46,10 @@ public class BearerTokenAuthenticator extends TokenAuthenticator {
 	      return sendUnauthorized(request, response, errorDescription);
 	    }
 	
-	    final String oid = token.getClaim(ClaimsConstants.OID_CLAIM);
+	    final String oid = token.getClaim(claimName);
 	
 	    if (oid == null)
-	      return sendBadRequest(response, "The required claim " + ClaimsConstants.OID_CLAIM + "was not found in parsed JWT");
+	      return sendBadRequest(response, "The required claim '" + claimName + "' was not found in parsed JWT");
 	
 	    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(oid, oid, oid, schemeProperties);
 	   
