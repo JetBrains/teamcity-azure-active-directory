@@ -5,7 +5,6 @@ import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationPro
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationResult;
 import jetbrains.buildServer.controllers.interceptors.auth.HttpAuthenticationSchemeAdapter;
 import jetbrains.buildServer.controllers.interceptors.auth.util.HttpAuthUtil;
-import jetbrains.buildServer.serverSide.auth.AuthModuleUtil;
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration;
 import jetbrains.buildServer.serverSide.auth.ServerPrincipal;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;

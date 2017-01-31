@@ -57,7 +57,7 @@ public class BearerTokenAuthenticator extends TokenAuthenticator {
 			return sendUnauthorized(request, response, String.format("User with " + claimName + " %s not found. (Remember to place the '" + claimName + "' in the email field)", oid));
 	    }
 	    LOG.debug("Request authenticated. Determined user " + principal.getName());
-	    return HttpAuthenticationResult.authenticated(principal, true);
+	    return HttpAuthenticationResult.authenticated(principal, HttpAuthRememberMeUtil.mustRememberMe());
 	}
 	
 	private String GetToken(HttpServletRequest request)
