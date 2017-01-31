@@ -54,7 +54,7 @@ public class BearerTokenAuthenticator extends TokenAuthenticator {
 	    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(oid, oid, oid, schemeProperties);
 	   
 	    LOG.debug("Request authenticated. Determined user " + principal.getName());
-	    return HttpAuthenticationResult.authenticated(principal, true);
+	    return HttpAuthenticationResult.authenticated(principal, HttpAuthRememberMeUtil.mustRememberMe());
 	}
 	
 	private String GetToken(HttpServletRequest request)
