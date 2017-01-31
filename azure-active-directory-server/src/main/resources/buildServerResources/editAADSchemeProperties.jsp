@@ -39,7 +39,7 @@
     	<prop:option value="<%=org.jetbrains.teamcity.aad.ClaimsConstants.OID_CLAIM%>">Object Id</prop:option>
     </prop:selectProperty>
     </br>
-    <span class="grayNote">The claim that will be used for matching the bearer token with a TeamCity user.</span>
+    <span class="grayNote">The claim that will be used for matching the bearer token with a TeamCity user's email field.</span>
 </div>
 
 <script type="text/javascript">
