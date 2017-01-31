@@ -26,9 +26,13 @@
     <span class="grayNote">Hide user/password login form on Teamcity login page.</span>
 </div>
 <br/>
+
+<span class="greyNote" style="border-bottom: 1px dotted #CCC; display: block;">Bearer Token Authentication</span>
+<br/>
+
 <div>
     <prop:checkboxProperty name="<%=org.jetbrains.teamcity.aad.AADConstants.ENABLE_TOKEN_AUTHENTICATION%>" uncheckedValue="false"/>
-    <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.ENABLE_TOKEN_AUTHENTICATION%>">Enable token authentication</label><br/>
+    <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.ENABLE_TOKEN_AUTHENTICATION%>">Enable bearer token authentication</label><br/>
     <span class="grayNote">Enable bearer token authentication on HTTP requests for API calls</span>
 </div>
 <br/>
