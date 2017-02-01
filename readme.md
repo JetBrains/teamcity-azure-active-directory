@@ -45,6 +45,10 @@ To install the plugin, put zip archive to 'plugins' dir under TeamCity data dire
 
 [Build on public CI server](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi)
 
+## Contributing
+
+Please follow [IntelliJ Coding Guidelines](http://www.jetbrains.org/display/IJOS/IntelliJ+Coding+Guidelines)
+
 # Feedback
 
 Please submit your questions/bugs/feature requests [here](https://github.com/ekoshkin/teamcity-azure-active-directory/issues)
