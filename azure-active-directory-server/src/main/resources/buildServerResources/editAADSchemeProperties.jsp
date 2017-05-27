@@ -9,9 +9,9 @@
 </div>
 <br/>
 <div>
-    <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY%>">App OAuth 2.0 authorization endpoint:</label><br/>
-    <prop:textProperty style="width: 100%;" name="<%=org.jetbrains.teamcity.aad.AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY%>"/><br/>
-    <span class="grayNote">Endpoint at which TeamCity server can obtain an authorization token using OAuth 2.0.</span>
+    <label width="100%" for="<%=org.jetbrains.teamcity.aad.AADConstants.AAD_TENANT_ID%>">AD Directory ID:</label><br/>
+    <prop:textProperty style="width: 100%;" name="<%=org.jetbrains.teamcity.aad.AADConstants.AAD_TENANT_ID%>"/><br/>
+    <span class="grayNote">The Tenant/Directory ID for the selected Azure AD.</span>
 </div>
 <br/>
 <div>

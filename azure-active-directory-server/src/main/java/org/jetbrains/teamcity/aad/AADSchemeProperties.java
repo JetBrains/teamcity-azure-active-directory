@@ -20,9 +20,9 @@ public class AADSchemeProperties {
   }
 
   @Nullable
-  public String getAppOAuthEndpoint() {
+  public String getAppTenantId() {
     final Map<String, String> properties = getAADSchemeProperties();
-    return properties == null ? null : properties.get(AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY);
+    return properties == null ? null : properties.get(AADConstants.AAD_TENANT_ID);
   }
 
   @Nullable

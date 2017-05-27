@@ -31,7 +31,7 @@ public class LoginViaAADController extends BaseController {
   @Override
   protected ModelAndView doHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws Exception {
     final String nonce = SessionUtil.getSessionId(request);
-    final String appOAuthEndpoint = myAADSchemeProperties.getAppOAuthEndpoint();
+    final String appOAuthEndpoint = "https://login.microsoftonline.com/" + myAADSchemeProperties.getAppTenantId() + "/oauth2/authorize";
     final String clientId = myAADSchemeProperties.getClientId();
     if(appOAuthEndpoint == null || clientId == null) return null;
     final String requestUrl = AADOpenIdConnect.getRequestUrl(appOAuthEndpoint, clientId, nonce);
