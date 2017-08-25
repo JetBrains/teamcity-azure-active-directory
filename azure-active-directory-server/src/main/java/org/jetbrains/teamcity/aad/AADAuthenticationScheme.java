@@ -34,6 +34,8 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   private static final String NAME_CLAIM = "unique_name";
   private static final String OID_CLAIM = "oid"; //object ID
   private static final String EMAIL_CLAIM = "upn";
+  private static final String FAMILY_NAME_CLAIM = "family_name";
+  private static final String GIVEN_NAME_CLAIM = "given_name";
   private static final String ERROR_CLAIM = "error";
   private static final String ERROR_DESCRIPTION_CLAIM = "error_description";
 
@@ -119,10 +121,13 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
       return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim doesn't correspond to current TeamCity session.");
 
     final String email = token.getClaim(EMAIL_CLAIM);
+    final String surname = token.getClaim(FAMILY_NAME_CLAIM);
+    final String firstname = token.getClaim(GIVEN_NAME_CLAIM);
+    final String displayName = firstname + " " + surname;
 
-    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
-
+    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, displayName, email, schemeProperties);
     LOG.debug("Request authenticated. Determined user " + principal.getName());
+
     return HttpAuthenticationResult.authenticated(principal, HttpAuthRememberMeUtil.mustRememberMe());
   }
 
