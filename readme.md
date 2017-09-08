@@ -1,11 +1,11 @@
 
 TeamCity plugin which supports authentication via Microsoft Azure Active Directory.
 
-Plugin compatible with TeamCity server 8.1+, 9.0+
+The plugin is compatible with TeamCity server 8.1+, 9.0+
 
 # Installation
 
-[Download latest plugin version](https://teamcity.jetbrains.com/repository/download/TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi/lastSuccessful/azure-active-directory.zip) and [install it as ususal](http://confluence.jetbrains.com/display/TCD9/Installing+Additional+Plugins#InstallingAdditionalPlugins-InstallingTeamCityplugins)
+[Download latest plugin version](https://teamcity.jetbrains.com/repository/download/TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi/lastSuccessful/azure-active-directory.zip) and [install it as usual](http://confluence.jetbrains.com/display/TCDL/Installing+Additional+Plugins#InstallingAdditionalPlugins-InstallingTeamCityplugins)
 
 # Configuration
 
@@ -21,27 +21,27 @@ Also please check for 'CLIENT ID', 'OAUTH 2.0 AUTHORIZATION ENDPOINT' in 'App En
 
 ## Configuring TeamCity server
 
-Add 'Microsoft Azure Active Directory' HTTP authentication module to your [authentication configuration](http://confluence.jetbrains.com/display/TCD9/Configuring+Authentication+Settings).
+Add the 'Microsoft Azure Active Directory' HTTP authentication module to your [authentication configuration](http://confluence.jetbrains.com/display/TCDL/Configuring+Authentication+Settings).
 
 Specify valid 'App OAuth 2.0 authorization endpoint' and 'Client ID' retrieved from Azure Portal.
 
-Use 'Log in using Azure Active Directory' link available on Login page to login via your Azure Active Directory account.
+Use the 'Log in using Azure Active Directory' link available on the Login page to log in via your Azure Active Directory account.
 
 # How it works?
 
 This authentication scheme works as following:
-- it receives UID, email, username of AD user from specified AD
-- looks for already added TeamCity user for received UID, if found authenticate this TeamCity user
-- if allowed by scheme options tries find TeamCity user by given e-mail
-- if user is not found and user creation is allowed, new TeamCity user is created, some user like email are setted for newly created TeamCity user
+- receives the UID, email, username of the AD user the from specified AD
+- looks for an existing TeamCity user for the received UID; and if found, authenticates this TeamCity user
+- if allowed by the scheme options, tries to find a TeamCity user by the given e-mail
+- if the user is not found and user creation is allowed, a new TeamCity user is created; the email is set as the username for the newly created TeamCity user
 
 # Plugin development
 
 ## Building plugin from sources
 
-Issue 'mvn package' command from the root project to build your plugin. Resulting package <artifactId>.zip will be placed in 'target' directory.
+Issue the 'mvn package' command from the root project to build your plugin. The resulting package <artifactId>.zip will be placed into the 'target' directory.
 
-To install the plugin, put zip archive to 'plugins' dir under TeamCity data directory and restart the server.
+To install the plugin, put the zip archive into the 'plugins' directory under the TeamCity data directory and restart the server.
 
 [Build on public CI server](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi)
 
@@ -53,5 +53,5 @@ Please follow [IntelliJ Coding Guidelines](http://www.jetbrains.org/display/IJOS
 
 Please submit your questions/bugs/feature requests [here](https://github.com/ekoshkin/teamcity-azure-active-directory/issues)
 
-This is not a bundled plugin, please do not use TeamCity official feedback channels to provide feedback for this plugin.
+This is not a bundled plugin, please do not use the TeamCity official channels to provide feedback for this plugin.
  
