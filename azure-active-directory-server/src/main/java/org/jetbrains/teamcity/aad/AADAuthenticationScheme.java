@@ -28,15 +28,6 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
 
   private static final Logger LOG = Logger.getLogger(AADAuthenticationScheme.class);
 
-  private static final String POST_METHOD = "POST";
-  private static final String ID_TOKEN = "id_token";
-  private static final String NONCE_CLAIM = "nonce";
-  private static final String NAME_CLAIM = "unique_name";
-  private static final String OID_CLAIM = "oid"; //object ID
-  private static final String EMAIL_CLAIM = "upn";
-  private static final String ERROR_CLAIM = "error";
-  private static final String ERROR_DESCRIPTION_CLAIM = "error_description";
-
   @NotNull private final PluginDescriptor myPluginDescriptor;
   @NotNull private final ServerPrincipalFactory myPrincipalFactory;
 
@@ -82,57 +73,27 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
     if(StringUtil.isEmptyOrSpaces(properties.get(AADConstants.CLIENT_ID_SCHEME_PROPERTY_KEY))){
       errors.add("Client ID should be specified.");
     }
+    
+    if(Boolean.valueOf(properties.get(AADConstants.ENABLE_TOKEN_AUTHENTICATION)) && !Boolean.valueOf(properties.get(AADConstants.ALLOW_MATCHING_USERS_BY_EMAIL))){
+      errors.add("In order to enable token authentication, matching users by email must be enabled too.");
+    }
+    
     return errors.isEmpty() ? super.validate(properties) : errors;
   }
 
   @NotNull
   @Override
   public HttpAuthenticationResult processAuthenticationRequest(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Map<String, String> schemeProperties) throws IOException {
-    if (!request.getMethod().equals(POST_METHOD)) return HttpAuthenticationResult.notApplicable();
-
-    final String idTokenString = request.getParameter(ID_TOKEN);
-    if(idTokenString == null){
-      LOG.debug("POST request contains no " + ID_TOKEN + " parameter so scheme is not applicable.");
-      return HttpAuthenticationResult.notApplicable();
-    }
-
-    final JWT token = JWT.parse(idTokenString);
-    if(token == null)
-      return sendBadRequest(response, String.format("Marked request as unauthenticated since failed to parse JWT from retrieved %s %s", ID_TOKEN, idTokenString));
-
-    final String error = token.getClaim(ERROR_CLAIM);
-    final String errorDescription = token.getClaim(ERROR_DESCRIPTION_CLAIM);
-
-    if(error != null){
-      LOG.warn(error);
-      return sendUnauthorized(request, response, errorDescription);
-    }
-
-    final String nonce = token.getClaim(NONCE_CLAIM);
-    final String name = token.getClaim(NAME_CLAIM);
-    final String oid = token.getClaim(OID_CLAIM);
-
-    if (nonce == null || name == null || oid == null)
-      return sendBadRequest(response, String.format("Some of required claims were not found in parsed JWT. nonce - %s; name - %s, oid - %s", nonce, name, oid));
-
-    if(!nonce.equals(SessionUtil.getSessionId(request)))
-      return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim doesn't correspond to current TeamCity session.");
-
-    final String email = token.getClaim(EMAIL_CLAIM);
-
-    final ServerPrincipal principal = myPrincipalFactory.getServerPrincipal(name, oid, email, schemeProperties);
-
-    LOG.debug("Request authenticated. Determined user " + principal.getName());
-    return HttpAuthenticationResult.authenticated(principal, HttpAuthRememberMeUtil.mustRememberMe());
-  }
-
-  private HttpAuthenticationResult sendUnauthorized(HttpServletRequest request, HttpServletResponse response, String reason) throws IOException {
-    return HttpAuthUtil.sendUnauthorized(request, response, reason, Collections.<HttpAuthenticationProtocol>emptySet());
-  }
-
-  private HttpAuthenticationResult sendBadRequest(HttpServletResponse response, String reason) throws IOException {
-    LOG.warn(reason);
-    response.sendError(HttpStatus.BAD_REQUEST.value(), reason);
-    return HttpAuthenticationResult.unauthenticated();
+	
+	  final TokenAuthenticator tokenAuthenticator = new TokenAuthenticatorFactory(schemeProperties, myPluginDescriptor, myPrincipalFactory)
+			  					  					   .GetTokenAuthenticator(request);
+	  
+	  if(tokenAuthenticator == null) 
+	  {
+		  LOG.debug("Request contains no token parameter or Authorization header so scheme is not applicable.");
+		  return HttpAuthenticationResult.notApplicable();
+	  }
+	  
+	  return tokenAuthenticator.processAuthenticationRequest(request, response);
   }
 }

@@ -21,8 +21,7 @@ public class ServerPrincipalFactory {
 
   private static final Logger LOG = Logger.getLogger(ServerPrincipalFactory.class);
 
-  private static final boolean DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN = true;
-  private static final String ALLOW_MATCHING_USERS_BY_EMAIL = "allowMatchingUsersByEmail";
+  private static final boolean DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN = true;;
 
   @NotNull private final UserModel myUserModel;
 
@@ -34,8 +33,8 @@ public class ServerPrincipalFactory {
   public ServerPrincipal getServerPrincipal(@NotNull String userName, @NotNull final String aadUserUID, @Nullable final String email, @NotNull Map<String, String> schemeProperties) {
     final ServerPrincipal existingPrincipal = findExistingPrincipalByUID(aadUserUID);
     if(existingPrincipal != null) return existingPrincipal;
-
-    if(email != null && allowMatchUserByEmail(schemeProperties)){
+    
+    if(email != null && allowMatchUserByEmail(schemeProperties)){ 
       final SUser userWithTheSameEmail = findExistingUserByEmail(email);
       if(userWithTheSameEmail != null){
         final String username = userWithTheSameEmail.getUsername();
@@ -44,7 +43,7 @@ public class ServerPrincipalFactory {
         return new ServerPrincipal(AADConstants.AAD_AUTH_SCHEME_NAME, username);
       }
     }
-
+    
     final boolean allowCreatingNewUsersByLogin = AuthModuleUtil.allowCreatingNewUsersByLogin(schemeProperties, DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN);
     final HashMap<PropertyKey, String> userProperties = new HashMap<PropertyKey, String>() {{
       put(AADConstants.OID_USER_PROPERTY_KEY, aadUserUID);
@@ -72,7 +71,7 @@ public class ServerPrincipalFactory {
   }
 
   private static boolean allowMatchUserByEmail(Map<String, String> schemeProperties) {
-    Object value = schemeProperties.get(ALLOW_MATCHING_USERS_BY_EMAIL);
+    Object value = schemeProperties.get(AADConstants.ALLOW_MATCHING_USERS_BY_EMAIL);
     return value != null && Boolean.parseBoolean((String) value);
   }
 }

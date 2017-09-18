@@ -38,7 +38,6 @@ public class JWT {
 		LOG.warn("Failed to verify JWT from JWS payload " + jwtString, e);
 	    return null;
 	}
-	
     final String[] jwtParts = jwtString.split(JWT_PARTS_DELIMITER);
     if(jwtParts.length != 3){
       LOG.warn(String.format("JWT is malformed since consist of %d parts instead of required 3.", jwtParts.length));
