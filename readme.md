@@ -10,7 +10,7 @@ The plugin is compatible with TeamCity server 8.1+, 9.0+
 
 ## Installation
 
-[Download latest plugin version](https://teamcity.jetbrains.com/repository/download/TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi/lastSuccessful/azure-active-directory.zip) and install it as [an additional TeamCity plugin](http://confluence.jetbrains.com/display/TCDL/Installing+Additional+Plugins#InstallingAdditionalPlugins-InstallingTeamCityplugins).
+[Download plugin](https://plugins.jetbrains.com/plugin/9083-azure-active-directory) and install it as [an additional TeamCity plugin](http://confluence.jetbrains.com/display/TCDL/Installing+Additional+Plugins#InstallingAdditionalPlugins-InstallingTeamCityplugins).
 
 ## Configuration
 
