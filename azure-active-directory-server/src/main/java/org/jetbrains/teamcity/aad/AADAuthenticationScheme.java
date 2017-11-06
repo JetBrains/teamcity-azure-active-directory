@@ -78,8 +78,8 @@ public class AADAuthenticationScheme extends HttpAuthenticationSchemeAdapter {
   @Override
   public Collection<String> validate(@NotNull Map<String, String> properties) {
     final Collection<String> errors = new ArrayList<String>();
-    if(StringUtil.isEmptyOrSpaces(properties.get(AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY))){
-      errors.add("App OAuth 2.0 authorization endpoint should be specified.");
+    if(StringUtil.isEmptyOrSpaces(properties.get(AADConstants.AAD_TENANT_ID))){
+      errors.add("The AD Tenant/Directory ID should be specified.");
     }
     if(StringUtil.isEmptyOrSpaces(properties.get(AADConstants.CLIENT_ID_SCHEME_PROPERTY_KEY))){
       errors.add("Client ID should be specified.");
