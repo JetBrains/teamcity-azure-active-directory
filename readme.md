@@ -1,4 +1,8 @@
-# TeamCity Azure Active Directory Integration [![official JetBrains project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
+# TeamCity Azure Active Directory Integration
+
+[![Plugin build](https://teamcity.jetbrains.com/app/rest/builds/buildType:(id:TeamCityPluginsByJetBrains_DotnetCLI_20172),branch:master/statusIcon.svg)](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_DotnetCLI_20172&guest=1)
+[![official JetBrains project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 TeamCity plugin which supports authentication via Microsoft Azure Active Directory.
 
@@ -6,7 +10,7 @@ The plugin is compatible with TeamCity server 8.1+, 9.0+
 
 ## Installation
 
-[Download latest plugin version](https://teamcity.jetbrains.com/repository/download/TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi/lastSuccessful/azure-active-directory.zip) and [install it as usual](http://confluence.jetbrains.com/display/TCDL/Installing+Additional+Plugins#InstallingAdditionalPlugins-InstallingTeamCityplugins)
+[Download latest plugin version](https://teamcity.jetbrains.com/repository/download/TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi/lastSuccessful/azure-active-directory.zip) and install it as [an additional TeamCity plugin](http://confluence.jetbrains.com/display/TCDL/Installing+Additional+Plugins#InstallingAdditionalPlugins-InstallingTeamCityplugins).
 
 ## Configuration
 
@@ -40,19 +44,14 @@ This authentication scheme works as following:
 
 ### Building plugin from sources
 
-Issue the 'mvn package' command from the root project to build your plugin. The resulting package <artifactId>.zip will be placed into the 'target' directory.
-
-To install the plugin, put the zip archive into the 'plugins' directory under the TeamCity data directory and restart the server.
-
-[Build on public CI server](https://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_AzureSupport_AzureActiveDirectoryPlugi)
+Issue the `mvn package` command from the root project to build your plugin. The resulting package `<artifactId>.zip` will be placed into the 'target' directory. To install the plugin, refer to the _Installation_ section.
 
 ### Contributing
 
-Please follow [IntelliJ Coding Guidelines](http://www.jetbrains.org/display/IJOS/IntelliJ+Coding+Guidelines)
+Please follow [IntelliJ Coding Guidelines](http://www.jetbrains.org/display/IJOS/IntelliJ+Coding+Guidelines).
 
 ## Feedback
 
-Please submit your questions/bugs/feature requests [here](https://github.com/ekoshkin/teamcity-azure-active-directory/issues)
+Please submit your questions/bugs/feature requests in the [issues](https://github.com/JetBrains/teamcity-azure-active-directory/issues).
 
-This is not a bundled plugin, please do not use the TeamCity official channels to provide feedback for this plugin.
- 
+Note: This is not a bundled plugin, please do not use the TeamCity official channels to provide feedback for this plugin.
