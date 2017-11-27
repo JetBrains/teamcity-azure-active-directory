@@ -8,7 +8,7 @@ ext {
     projectIds = [
             'group': 'teamcity-azure-active-directory',
             'version': versionNumber,
-            'artifact': 'azure-active-directory-server'
+            'artifact': 'azure-active-directory'
     ]
     teamcityVersion = project.hasProperty('teamcityVersion') ? property('teamcityVersion') : '10.0'
 }
