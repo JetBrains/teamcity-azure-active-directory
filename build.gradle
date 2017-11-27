@@ -1,0 +1,35 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.1.51"
+}
+
+ext {
+    def correctVersion = project.hasProperty('versionNumber') && property('versionNumber') ==~ /\d+(\.\d+\.\d+.*)?/
+    versionNumber = correctVersion ? property('versionNumber') : 'SNAPSHOT-' + new Date().format('yyyyMMddHHmmss')
+    projectIds = [
+            'group': 'teamcity-azure-active-directory',
+            'version': versionNumber,
+            'artifact': 'azure-active-directory-server'
+    ]
+    teamcityVersion = project.hasProperty('teamcityVersion') ? property('teamcityVersion') : '10.0'
+}
+
+group = projectIds.group
+version = projectIds.version
+
+allprojects {
+    group = projectIds.group
+    version = projectIds.version
+}
+
+subprojects {
+    apply plugin: "kotlin"
+
+    kotlin { experimental { coroutines 'enable' } }
+
+    test.useTestNG()
+    jar.version = null
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2.1'
+}

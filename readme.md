@@ -6,7 +6,7 @@
 
 TeamCity plugin which supports authentication via Microsoft Azure Active Directory.
 
-The plugin is compatible with TeamCity server 8.1+, 9.0+
+The plugin is compatible with TeamCity server 10.0+
 
 ## Installation
 
@@ -44,7 +44,8 @@ This authentication scheme works as following:
 
 ### Building plugin from sources
 
-Issue the `mvn package` command from the root project to build your plugin. The resulting package `<artifactId>.zip` will be placed into the 'target' directory. To install the plugin, refer to the _Installation_ section.
+This project uses gradle as a build system. You can easily open it in [IntelliJ IDEA](https://www.jetbrains.com/idea/help/importing-project-from-gradle-model.html) or [Eclipse](http://gradle.org/eclipse/).
+Issue the `build` command from the root project to build your plugin. The resulting package will be placed in the `distributions` directory.
 
 ### Contributing
 

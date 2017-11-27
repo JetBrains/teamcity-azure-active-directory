@@ -1,0 +1,27 @@
+plugins {
+    id 'com.github.rodm.teamcity-server' version "1.0"
+}
+
+teamcity {
+    version = teamcityVersion
+    server {
+        descriptor = project.file('teamcity-plugin.xml')
+        tokens = [Plugin_Version: project.version]
+    }
+}
+
+dependencies {
+    compile('org.bitbucket.b_c:jose4j:0.5.4') {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    provided 'com.google.code.gson:gson:2.5'
+    provided "org.jetbrains.teamcity:server-api:$teamcityVersion"
+    provided "org.jetbrains.teamcity:server-web-api:$teamcityVersion"
+    testCompile "org.jetbrains.teamcity:tests-support:$teamcityVersion"
+}
+
+serverPlugin.version = null
+serverPlugin.baseName = projectIds.artifact
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7

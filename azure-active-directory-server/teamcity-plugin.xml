@@ -3,14 +3,11 @@
   <info>
     <name>azure-active-directory</name>
     <display-name>Azure Active Directory Support</display-name>
-    <version>@Version@</version>
+    <version>@Plugin_Version@</version>
     <description>Support for Microsoft Azure Active Directory (AAD) authentication</description>
-    <download-url>Plugin download URL</download-url>
-    <email>evgeniy.koshkin@jetbrains.com</email>
     <vendor>
       <name>JetBrains, s.r.o.</name>
       <url>https://www.jetbrains.com/</url>
-      <logo>https://www.jetbrains.com/company/docs/logo_jetbrains.png</logo>
     </vendor>
   </info>
   <deployment use-separate-classloader="true" />

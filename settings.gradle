@@ -1,0 +1,3 @@
+rootProject.name='teamcity-azure-active-directory'
+
+include 'azure-active-directory-server'
