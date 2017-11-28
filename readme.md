@@ -16,11 +16,15 @@ The plugin is compatible with TeamCity server 10.0+
 
 ### Configuring Azure Active Directory
 
-[Register](https://msdn.microsoft.com/en-us/library/azure/dn132599.aspx#BKMK_Adding) your TeamCity server as an application in your Azure Active Directory.
+Register a new [Azure Active Directory application](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#adding-an-application) for your TeamCity server with a following parameters:
 
-Set 'SIGN-ON URL' to `{TEAMCITY_URL}/login.html`
+| Parameter        | Value                          |
+| -                | -                              |
+| Application type | Web app / API                  |
+| Sign-on URL      | `%TEAMCITY_URL%/login.html`    |
+| Reply URLs       | `%TEAMCITY_URL%/overview.html` |
 
-Add 'REPLY URL' `{TEAMCITY_URL}/overview.html`
+Note: Reply URLs could be set in the application settings.
 
 Also please check for 'CLIENT ID', 'OAUTH 2.0 AUTHORIZATION ENDPOINT' in 'App Endpoints' section.
 
@@ -28,17 +32,32 @@ Also please check for 'CLIENT ID', 'OAUTH 2.0 AUTHORIZATION ENDPOINT' in 'App En
 
 Add the 'Microsoft Azure Active Directory' HTTP authentication module to your [authentication configuration](http://confluence.jetbrains.com/display/TCDL/Configuring+Authentication+Settings).
 
-Specify valid 'App OAuth 2.0 authorization endpoint' and 'Client ID' retrieved from Azure Portal.
+Specify valid 'OAuth 2.0 authorization endpoint' and 'Application ID' retrieved from Azure Portal.
 
-Use the 'Log in using Azure Active Directory' link available on the Login page to log in via your Azure Active Directory account.
+Note: OAuth 2.0 authorization endpoint URL could be retrieved from the Endpoints available on the App registrations page in Azure portal.
+
+After that 'Log in using Azure Active Directory' link will be available on the Login page.
+
+### Known issues
+
+#### Authentication fails with HTTP 403
+
+> 403 Forbidden: Responding with 403 status code due to failed CSRF check: request's "Origin" header value "null" does not match Host/X-Forwarded-Host header values or server's CORS-trusted hosts, consider adding "Origin: %TEAMCITY_URL%" header.
+
+If you are using modern browser and have specified HTTP URL as `Reply URLs` in Azure AD application browser will set `Origin: null` and `Upgrade-Insecure-Requests` headers after redirecting from Azure AD HTTPS endpoint to the TeamCity HTTP URL due to [security reasons](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Upgrade-Insecure-Requests).
+
+Possible solutions:
+* Use HTTPS for TeamCity server and specify it in Azure AD application settings
+* For testing you could specify [internal property](https://confluence.jetbrains.com/display/TCDL/Configuring+TeamCity+Server+Startup+Properties) `rest.cors.origins=null` (**insecure, don't use it in production**)
 
 ## How it works?
 
-This authentication scheme works as following:
-- receives the UID, email, username of the AD user the from specified AD
+This plugin uses [OAuth 2.0 OpenID Connect](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-openid-connect-code) authentication protocol and works as following:
+- receives the UID, e-mail, username of the AD user the from specified Azure AD
 - looks for an existing TeamCity user for the received UID; and if found, authenticates this TeamCity user
-- if allowed by the scheme options, tries to find a TeamCity user by the given e-mail
-- if the user is not found and user creation is allowed, a new TeamCity user is created; the email is set as the username for the newly created TeamCity user
+- if allowed by the scheme options, tries to find a TeamCity user by the given e-mail and marks it by UID
+- if the user was found and user details synchronization is enabled it will update user data
+- if the user is not found and user creation is allowed, a new TeamCity user is created; the e-mail is set as the username for the newly created TeamCity user.
 
 ## Plugin development
 
