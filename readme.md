@@ -26,8 +26,6 @@ Register a new [Azure Active Directory application](https://docs.microsoft.com/e
 
 Note: Reply URLs could be set in the application settings.
 
-Also please check for 'CLIENT ID', 'OAUTH 2.0 AUTHORIZATION ENDPOINT' in 'App Endpoints' section.
-
 ### Configuring TeamCity server
 
 Add the 'Microsoft Azure Active Directory' HTTP authentication module to your [authentication configuration](http://confluence.jetbrains.com/display/TCDL/Configuring+Authentication+Settings).
