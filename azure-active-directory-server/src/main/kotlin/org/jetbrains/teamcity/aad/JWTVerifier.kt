@@ -1,8 +1,7 @@
 package org.jetbrains.teamcity.aad
 
 import org.jose4j.jwk.HttpsJwks
-import org.jose4j.jwt.consumer.InvalidJwtException
-import org.jose4j.jwt.consumer.JwtConsumer
+import org.jose4j.jwt.JwtClaims
 import org.jose4j.jwt.consumer.JwtConsumerBuilder
 import org.jose4j.keys.resolvers.HttpsJwksVerificationKeyResolver
 
@@ -13,7 +12,7 @@ object JWTVerifier {
     /**
      * @param jwtString Java Web Token string
      */
-    fun verify(jwtString: String) {
+    fun verify(jwtString: String): JwtClaims {
         val httpsJwksKeyResolver = HttpsJwksVerificationKeyResolver(AADKeys)
         val jwtConsumer = JwtConsumerBuilder()
                 .setRequireExpirationTime() // the JWT must have an expiration time
@@ -23,6 +22,6 @@ object JWTVerifier {
                 .setVerificationKeyResolver(httpsJwksKeyResolver)
                 .build()
 
-        jwtConsumer.processToClaims(jwtString)
+        return jwtConsumer.processToClaims(jwtString)
     }
 }
