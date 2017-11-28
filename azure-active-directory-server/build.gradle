@@ -11,6 +11,7 @@ teamcity {
 }
 
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile('org.bitbucket.b_c:jose4j:0.5.4') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
