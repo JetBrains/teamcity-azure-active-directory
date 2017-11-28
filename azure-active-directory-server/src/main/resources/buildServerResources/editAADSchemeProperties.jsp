@@ -5,12 +5,12 @@
 <br/>
 <div>
     <prop:checkboxProperty name="allowUserDetailsSync" uncheckedValue="false"/>
-    <label width="100%" for="allowUserDetailsSync">Allow synchronization of user details with Azure when logging in</label>
+    <label width="100%" for="allowUserDetailsSync">Allow synchronization of user details with Azure AD when logging in</label>
 </div>
 <br/>
 <div>
     <prop:checkboxProperty name="allowMatchingUsersByEmail" uncheckedValue="false"/>
-    <label width="100%" for="allowMatchingUsersByEmail">Allow matching users by Email</label>
+    <label width="100%" for="allowMatchingUsersByEmail">Allow matching users by e-mail</label>
 </div>
 <br/>
 <div>
