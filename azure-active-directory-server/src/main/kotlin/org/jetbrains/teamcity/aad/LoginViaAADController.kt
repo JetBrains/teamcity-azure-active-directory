@@ -27,7 +27,13 @@ class LoginViaAADController(webManager: WebControllerManager,
         if (endpoint == null || clientId == null) return null
 
         val separator = if (endpoint.contains('?')) '&' else '?'
-        val requestUrl = "$endpoint${separator}response_type=id_token&client_id=$clientId&scope=openid&nonce=$nonce&response_mode=form_post"
+        val requestUrl = "$endpoint$separator" +
+                "response_type=id_token" +
+                "&client_id=$clientId" +
+                "&scope=openid" +
+                "&nonce=$nonce"+
+                "&response_mode=form_post" +
+                "&prompt=consent"
 
         return ModelAndView(RedirectView(requestUrl))
     }
