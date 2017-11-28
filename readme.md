@@ -42,7 +42,7 @@ After that 'Log in using Azure Active Directory' link will be available on the L
 
 > 403 Forbidden: Responding with 403 status code due to failed CSRF check: request's "Origin" header value "null" does not match Host/X-Forwarded-Host header values or server's CORS-trusted hosts, consider adding "Origin: %TEAMCITY_URL%" header.
 
-If you are using modern browser and have specified HTTP URL as `Reply URLs` in Azure AD application browser will set `Origin: null` and `Upgrade-Insecure-Requests` headers after redirecting from Azure AD HTTPS endpoint to the TeamCity HTTP URL due to [security reasons](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Upgrade-Insecure-Requests).
+Modern browsers could set `Origin: null` and `Upgrade-Insecure-Requests` headers while replying from HTTPS Azure endpoint to the HTTP URL of TeamCity server due to [security reasons](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Upgrade-Insecure-Requests).
 
 Possible solutions:
 * Use HTTPS for TeamCity server and specify it in Azure AD application settings
