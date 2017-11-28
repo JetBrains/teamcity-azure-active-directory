@@ -29,8 +29,6 @@ class LoginViaAADController(webManager: WebControllerManager,
         val separator = if (endpoint.contains('?')) '&' else '?'
         val requestUrl = "$endpoint${separator}response_type=id_token&client_id=$clientId&scope=openid&nonce=$nonce&response_mode=form_post"
 
-        response.setHeader("Access-Control-Allow-Origin", "*")
-
         return ModelAndView(RedirectView(requestUrl))
     }
 }
