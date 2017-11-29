@@ -59,15 +59,12 @@ class ServerPrincipalFactory(private val myUserModel: UserModel) {
 
     companion object {
         private val LOG = Logger.getLogger(ServerPrincipalFactory::class.java.name)
-
         private val DEFAULT_ALLOW_CREATING_NEW_USERS_BY_LOGIN = true
-        private val ALLOW_MATCHING_USERS_BY_EMAIL = "allowMatchingUsersByEmail"
-        private val ALLOW_USER_DETAILS_SYNC = "allowUserDetailsSync"
 
         private fun allowMatchUserByEmail(schemeProperties: Map<String, String>): Boolean =
-                schemeProperties[ALLOW_MATCHING_USERS_BY_EMAIL]?.toBoolean() ?: false
+                schemeProperties[AADConstants.ALLOW_MATCHING_USERS_BY_EMAIL]?.toBoolean() ?: false
 
         private fun allowUserDetailsSync(schemeProperties: Map<String, String>): Boolean =
-                schemeProperties[ALLOW_USER_DETAILS_SYNC]?.toBoolean() ?: false
+                schemeProperties[AADConstants.ALLOW_USER_DETAILS_SYNC]?.toBoolean() ?: false
     }
 }

@@ -13,6 +13,9 @@ class AADSchemeProperties(private val loginConfiguration: LoginConfiguration) {
     val clientId: String?
         get() = properties?.get(AADConstants.CLIENT_ID_SCHEME_PROPERTY_KEY)
 
+    val authPrompt: String?
+        get() = properties?.get(AADConstants.AUTH_PROMPT)
+
     val isSchemeConfigured: Boolean
         get() = properties != null
 

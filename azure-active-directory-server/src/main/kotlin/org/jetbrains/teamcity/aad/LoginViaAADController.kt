@@ -27,14 +27,20 @@ class LoginViaAADController(webManager: WebControllerManager,
         if (endpoint == null || clientId == null) return null
 
         val separator = if (endpoint.contains('?')) '&' else '?'
-        val requestUrl = "$endpoint$separator" +
-                "response_type=id_token" +
-                "&client_id=$clientId" +
-                "&scope=openid" +
-                "&nonce=$nonce"+
-                "&response_mode=form_post" +
-                "&prompt=consent"
+        val requestUrl = StringBuilder("$endpoint$separator")
+                .append("response_type=id_token")
+                .append("&client_id=$clientId")
+                .append("&scope=openid")
+                .append("&nonce=$nonce")
+                .append("&response_mode=form_post")
+                .apply {
+                    aadSchemeProperties.authPrompt?.let {
+                        if (it.isNotEmpty()) {
+                            this.append("&prompt=${it.trim()}")
+                        }
+                    }
+                }
 
-        return ModelAndView(RedirectView(requestUrl))
+        return ModelAndView(RedirectView(requestUrl.toString()))
     }
 }
