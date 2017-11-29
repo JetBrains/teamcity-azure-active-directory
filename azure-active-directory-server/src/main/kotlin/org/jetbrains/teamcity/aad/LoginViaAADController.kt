@@ -1,11 +1,12 @@
 package org.jetbrains.teamcity.aad
 
+import jetbrains.buildServer.RootUrlHolder
 import jetbrains.buildServer.controllers.AuthorizationInterceptor
 import jetbrains.buildServer.controllers.BaseController
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.view.RedirectView
-
+import org.springframework.web.util.UriComponentsBuilder
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -14,7 +15,8 @@ import javax.servlet.http.HttpServletResponse
  */
 class LoginViaAADController(webManager: WebControllerManager,
                             authInterceptor: AuthorizationInterceptor,
-                            private val aadSchemeProperties: AADSchemeProperties) : BaseController() {
+                            private val aadSchemeProperties: AADSchemeProperties,
+                            private val rootUrlHolder: RootUrlHolder) : BaseController() {
     init {
         webManager.registerController(AADConstants.LOGIN_PATH, this)
         authInterceptor.addPathNotRequiringAuth(AADConstants.LOGIN_PATH)
@@ -38,6 +40,11 @@ class LoginViaAADController(webManager: WebControllerManager,
                         if (it.isNotEmpty()) {
                             this.append("&prompt=${it.trim()}")
                         }
+                    }
+                    UriComponentsBuilder.fromUriString(rootUrlHolder.rootUrl)
+                            .replacePath("/overview.html")
+                            .toUriString().let {
+                        this.append("&redirect_uri=$it")
                     }
                 }
 
