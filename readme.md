@@ -38,7 +38,12 @@ After that 'Log in using Azure Active Directory' link will be available on the L
 
 ### Known issues
 
-#### Authentication fails with HTTP 403
+#### Authentication fails with HTTP 403: Origin https://login.microsoftonline.com
+
+To fix that specify [internal property](https://confluence.jetbrains.com/display/TCDL/Configuring+TeamCity+Server+Startup+Properties) `rest.cors.origins=https://login.microsoftonline.com`
+
+#### Authentication fails with HTTP 403: Origin null
+
 
 > 403 Forbidden: Responding with 403 status code due to failed CSRF check: request's "Origin" header value "null" does not match Host/X-Forwarded-Host header values or server's CORS-trusted hosts, consider adding "Origin: %TEAMCITY_URL%" header.
 
