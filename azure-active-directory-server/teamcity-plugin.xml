@@ -4,10 +4,10 @@
     <name>azure-active-directory</name>
     <display-name>Microsoft Azure Active Directory Support</display-name>
     <version>@Plugin_Version@</version>
-    <description>Support for Microsoft Azure Active Directory authentication</description>
+    <description>Allows using Microsoft Azure Active Directory for authentication in TeamCity</description>
     <vendor>
       <name>JetBrains, s.r.o.</name>
-      <url>https://www.jetbrains.com/</url>
+      <url>https://github.com/JetBrains/teamcity-azure-active-directory</url>
     </vendor>
   </info>
   <deployment use-separate-classloader="true" />
