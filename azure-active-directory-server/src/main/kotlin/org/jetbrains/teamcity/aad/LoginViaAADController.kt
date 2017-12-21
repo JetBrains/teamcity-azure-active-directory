@@ -42,7 +42,7 @@ class LoginViaAADController(webManager: WebControllerManager,
                         }
                     }
                     UriComponentsBuilder.fromUriString(rootUrlHolder.rootUrl)
-                            .replacePath("/overview.html")
+                            .pathSegment("overview.html")
                             .toUriString().let {
                         this.append("&redirect_uri=$it")
                     }
