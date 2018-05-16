@@ -10,6 +10,6 @@
       <url>https://github.com/JetBrains/teamcity-azure-active-directory</url>
     </vendor>
   </info>
-  <deployment use-separate-classloader="true" />
   <requirements min-build="40000" />
+  <deployment use-separate-classloader="true" />
 </teamcity-plugin>
