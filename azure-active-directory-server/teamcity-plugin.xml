@@ -22,7 +22,7 @@
     <version>@Plugin_Version@</version>
     <description>Allows using Microsoft Azure Active Directory for authentication in TeamCity</description>
     <vendor>
-      <name>JetBrains, s.r.o.</name>
+      <name>JetBrains</name>
       <url>https://github.com/JetBrains/teamcity-azure-active-directory</url>
     </vendor>
   </info>
