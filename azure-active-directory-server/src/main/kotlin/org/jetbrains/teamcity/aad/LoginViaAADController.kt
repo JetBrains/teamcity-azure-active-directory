@@ -19,6 +19,8 @@ package org.jetbrains.teamcity.aad
 import jetbrains.buildServer.RootUrlHolder
 import jetbrains.buildServer.controllers.AuthorizationInterceptor
 import jetbrains.buildServer.controllers.BaseController
+import jetbrains.buildServer.web.CSRFFilter
+import jetbrains.buildServer.web.CsrfCheck
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.view.RedirectView
@@ -44,6 +46,7 @@ class LoginViaAADController(webManager: WebControllerManager,
         val clientId = aadSchemeProperties.clientId
         if (endpoint == null || clientId == null) return null
 
+        val csrfToken = request.getSession().getAttribute(CSRFFilter.ATTRIBUTE)
         val separator = if (endpoint.contains('?')) '&' else '?'
         val requestUrl = StringBuilder("$endpoint$separator")
                 .append("response_type=id_token")
@@ -51,6 +54,7 @@ class LoginViaAADController(webManager: WebControllerManager,
                 .append("&scope=openid")
                 .append("&nonce=$nonce")
                 .append("&response_mode=form_post")
+                .append("&state=$csrfToken")
                 .apply {
                     aadSchemeProperties.authPrompt?.let {
                         if (it.isNotEmpty()) {

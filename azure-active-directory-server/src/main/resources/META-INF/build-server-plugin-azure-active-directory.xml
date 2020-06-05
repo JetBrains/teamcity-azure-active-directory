@@ -22,4 +22,5 @@
     <bean class="org.jetbrains.teamcity.aad.LoginViaAADController"/>
     <bean class="org.jetbrains.teamcity.aad.AADSchemeProperties"/>
     <bean class="org.jetbrains.teamcity.aad.ServerPrincipalFactory"/>
+    <bean class="org.jetbrains.teamcity.aad.AADCSRFCheck" />
 </beans>
