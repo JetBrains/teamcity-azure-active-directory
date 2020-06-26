@@ -35,7 +35,8 @@ import javax.servlet.http.HttpServletResponse
  */
 class AADAuthenticationScheme(loginConfiguration: LoginConfiguration,
                               private val pluginDescriptor: PluginDescriptor,
-                              private val principalFactory: ServerPrincipalFactory)
+                              private val principalFactory: ServerPrincipalFactory,
+                              private val accessTokenValidator: AADAccessTokenValidator)
     : HttpAuthenticationSchemeAdapter() {
 
     init {
@@ -99,8 +100,8 @@ class AADAuthenticationScheme(loginConfiguration: LoginConfiguration,
             return sendBadRequest(response, "Some of required claims were not found in parsed JWT. nonce - $nonce; name - $uniqueName, oid - $oid")
         }
 
-        if (nonce != request.getSessionId()) {
-            return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim doesn't correspond to current TeamCity session.")
+        if (accessTokenValidator.validate(nonce)) {
+            return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim is incorrect.")
         }
 
         // Get e-mail

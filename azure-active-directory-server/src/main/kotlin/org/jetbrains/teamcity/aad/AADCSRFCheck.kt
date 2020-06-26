@@ -23,7 +23,7 @@ import jetbrains.buildServer.web.CsrfCheck.CheckResult.unsafe
 import java.net.URL
 import javax.servlet.http.HttpServletRequest
 
-class AADCSRFCheck : CsrfCheck {
+class AADCSRFCheck(private val accessTokenValidator: AADAccessTokenValidator) : CsrfCheck {
     override fun describe(verbose: Boolean) = "Azure Active Directory Authentication plugin CSRF check"
 
     override fun isSafe(request: HttpServletRequest): CsrfCheck.CheckResult {
@@ -35,12 +35,9 @@ class AADCSRFCheck : CsrfCheck {
             return CsrfCheck.UNKNOWN
         }
 
-        val session = request.getSession(false)
-        if (session != null) {
-            val parameter = request.getParameter(STATE_PARAMETER)
-            if (parameter != null) {
-                return if (parameter == session.getAttribute(CSRFFilter.ATTRIBUTE)) safe() else unsafe("CSRF parameter " + STATE_PARAMETER + " does not match CSRF session value")
-            }
+        val parameter = request.getParameter(NONCE_PARAMETER)
+        if (parameter != null) {
+            return if (accessTokenValidator.validate(parameter)) safe() else unsafe("NONCE parameter is incorrect")
         }
 
         return CsrfCheck.UNKNOWN
@@ -48,7 +45,7 @@ class AADCSRFCheck : CsrfCheck {
 
     companion object {
         val ACTION_METHODS = setOf("POST")
-        val STATE_PARAMETER = "state"
+        val NONCE_PARAMETER = "nonce"
         val URL_SUFFIX = "/overview.html"
     }
 }

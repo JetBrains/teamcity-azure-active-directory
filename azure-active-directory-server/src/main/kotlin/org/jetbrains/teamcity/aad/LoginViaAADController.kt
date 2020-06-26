@@ -34,19 +34,19 @@ import javax.servlet.http.HttpServletResponse
 class LoginViaAADController(webManager: WebControllerManager,
                             authInterceptor: AuthorizationInterceptor,
                             private val aadSchemeProperties: AADSchemeProperties,
-                            private val rootUrlHolder: RootUrlHolder) : BaseController() {
+                            private val rootUrlHolder: RootUrlHolder,
+                            private val accessTokenFactory: AADAccessTokenFactory) : BaseController() {
     init {
         webManager.registerController(AADConstants.LOGIN_PATH, this)
         authInterceptor.addPathNotRequiringAuth(AADConstants.LOGIN_PATH)
     }
 
     override fun doHandle(request: HttpServletRequest, response: HttpServletResponse): ModelAndView? {
-        val nonce = request.getSessionId()
+        val nonce = accessTokenFactory.create()
         val endpoint = aadSchemeProperties.appOAuthEndpoint
         val clientId = aadSchemeProperties.clientId
         if (endpoint == null || clientId == null) return null
 
-        val csrfToken = request.getSession().getAttribute(CSRFFilter.ATTRIBUTE)
         val separator = if (endpoint.contains('?')) '&' else '?'
         val requestUrl = StringBuilder("$endpoint$separator")
                 .append("response_type=id_token")
@@ -54,7 +54,6 @@ class LoginViaAADController(webManager: WebControllerManager,
                 .append("&scope=openid")
                 .append("&nonce=$nonce")
                 .append("&response_mode=form_post")
-                .append("&state=$csrfToken")
                 .apply {
                     aadSchemeProperties.authPrompt?.let {
                         if (it.isNotEmpty()) {

@@ -33,6 +33,7 @@ dependencies {
     }
     provided "org.jetbrains.teamcity:server-api:$teamcityVersion"
     provided "org.jetbrains.teamcity:server-web-api:$teamcityVersion"
+    provided "org.jetbrains.teamcity.internal:server:$teamcityVersion"
     testCompile "org.jetbrains.teamcity:tests-support:$teamcityVersion"
 }
 
