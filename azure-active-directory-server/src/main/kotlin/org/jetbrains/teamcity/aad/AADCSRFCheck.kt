@@ -16,10 +16,10 @@
 
 package org.jetbrains.teamcity.aad
 
-import jetbrains.buildServer.web.CSRFFilter
 import jetbrains.buildServer.web.CsrfCheck
 import jetbrains.buildServer.web.CsrfCheck.CheckResult.safe
 import jetbrains.buildServer.web.CsrfCheck.CheckResult.unsafe
+import org.jetbrains.teamcity.aad.AADConstants.ID_TOKEN
 import java.net.URL
 import javax.servlet.http.HttpServletRequest
 
@@ -35,9 +35,21 @@ class AADCSRFCheck(private val accessTokenValidator: AADAccessTokenValidator) : 
             return CsrfCheck.UNKNOWN
         }
 
-        val parameter = request.getParameter(NONCE_PARAMETER)
-        if (parameter != null) {
-            return if (accessTokenValidator.validate(parameter)) safe() else unsafe("NONCE parameter is incorrect")
+        var nonce = request.getParameter(NONCE_PARAMETER)
+        if (nonce == null) {
+            val idToken = request.getParameter(ID_TOKEN)
+            if (idToken == null) {
+                return CsrfCheck.UNKNOWN
+            }
+
+            val token =  JWT.parse(idToken)
+            if (token == null) {
+                return CsrfCheck.UNKNOWN
+            }
+            nonce = token.getClaim(AADConstants.NONCE_CLAIM)
+        }
+        if (nonce != null) {
+            return if (accessTokenValidator.validate(nonce)) safe() else unsafe("NONCE parameter is incorrect")
         }
 
         return CsrfCheck.UNKNOWN

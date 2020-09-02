@@ -32,5 +32,8 @@ object AADConstants {
     const val AUTH_PROMPT = "authPrompt"
     const val LOGIN_PATH = "/aadLogin.html"
 
+    const val ID_TOKEN = "id_token"
+    const val NONCE_CLAIM = "nonce"
+
     val OID_USER_PROPERTY_KEY: PropertyKey = PluginPropertyKey(PluginTypes.AUTH_PLUGIN_TYPE, "azure-active-directory", "oid")
 }

@@ -61,7 +61,7 @@ class AADAccessTokenManagerImpl(
 
         try {
             val jwtClaims = jwtConsumer.processToClaims(token)
-            if (jwtClaims.issuer !== serverSettings.serverUUID) {
+            if (jwtClaims.issuer != serverSettings.serverUUID) {
                 LOG.warn("Incorrect issuer: ${jwtClaims.issuer}")
                 return false
             }

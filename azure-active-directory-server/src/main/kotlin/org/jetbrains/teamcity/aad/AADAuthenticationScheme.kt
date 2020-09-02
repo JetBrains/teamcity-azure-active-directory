@@ -24,6 +24,8 @@ import jetbrains.buildServer.serverSide.TeamCityProperties
 import jetbrains.buildServer.serverSide.auth.LoginConfiguration
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import org.apache.log4j.Logger
+import org.jetbrains.teamcity.aad.AADConstants.ID_TOKEN
+import org.jetbrains.teamcity.aad.AADConstants.NONCE_CLAIM
 import org.springframework.http.HttpStatus
 import java.net.MalformedURLException
 import java.net.URL
@@ -100,7 +102,7 @@ class AADAuthenticationScheme(loginConfiguration: LoginConfiguration,
             return sendBadRequest(response, "Some of required claims were not found in parsed JWT. nonce - $nonce; name - $uniqueName, oid - $oid")
         }
 
-        if (accessTokenValidator.validate(nonce)) {
+        if (!accessTokenValidator.validate(nonce)) {
             return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim is incorrect.")
         }
 
@@ -144,9 +146,6 @@ class AADAuthenticationScheme(loginConfiguration: LoginConfiguration,
 
     companion object {
         private val LOG = Logger.getLogger(AADAuthenticationScheme::class.java.name)
-
-        private val ID_TOKEN = "id_token"
-        private val NONCE_CLAIM = "nonce"
 
         private val OID_CLAIM = "oid" //object ID
         private val UPN_CLAIM = "upn"
