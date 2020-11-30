@@ -22,14 +22,11 @@ import jetbrains.buildServer.serverSide.crypt.EncryptionManager
 import jetbrains.buildServer.serverSide.auth.impl.TokenGenerator
 import org.apache.log4j.Logger
 import org.jose4j.jwa.AlgorithmConstraints
-import org.jose4j.jwa.AlgorithmConstraints.ALLOW_ONLY_NONE
-import org.jose4j.jwa.AlgorithmConstraints.NO_CONSTRAINTS
 import org.jose4j.jwk.RsaJwkGenerator
 import org.jose4j.jws.AlgorithmIdentifiers
 import org.jose4j.jws.JsonWebSignature
 import org.jose4j.jwt.JwtClaims
 import org.jose4j.jwt.consumer.JwtConsumerBuilder
-import org.jose4j.jwt.consumer.ErrorCodes.AUDIENCE_INVALID
 import org.jose4j.jwt.consumer.InvalidJwtException
 
 class AADAccessTokenManagerImpl(
@@ -79,7 +76,7 @@ class AADAccessTokenManagerImpl(
     private fun createClaims(): JwtClaims {
         var claims = JwtClaims()
         claims.issuer = serverSettings.serverUUID
-        claims.setExpirationTimeMinutesInTheFuture(TeamCityProperties.getFloat(TTL_IN_MINUTES, DEFAULT_TTL_IN_MINUTES))
+        claims.setExpirationTimeMinutesInTheFuture(TeamCityProperties.getFloat(AADConstants.TTL_IN_MINUTES_PROPERTY, DEFAULT_TTL_IN_MINUTES))
         claims.setIssuedAtToNow()
         claims.setClaim(SALT_CLAIM, tokenGenerator.generateString(SALT_LENGTH))
         return claims
@@ -92,7 +89,6 @@ class AADAccessTokenManagerImpl(
         private const val RSA_KEY_LENGTH = 2048
         private const val SALT_CLAIM = "salt"
         private const val SALT_LENGTH = 64
-        private const val TTL_IN_MINUTES = "teamcity.aad.token.ttl"
         private const val DEFAULT_TTL_IN_MINUTES = 5f // 5 mins
     }
 }

@@ -23,7 +23,10 @@ import org.jetbrains.teamcity.aad.AADConstants.ID_TOKEN
 import java.net.URL
 import javax.servlet.http.HttpServletRequest
 
-class AADCSRFCheck(private val accessTokenValidator: AADAccessTokenValidator) : CsrfCheck {
+class AADCSRFCheck(
+        private val accessTokenValidator: AADAccessTokenValidator,
+        private val callbackPathProvider: AADAuthCallbackPathProvider
+) : CsrfCheck {
     override fun describe(verbose: Boolean) = "Azure Active Directory Authentication plugin CSRF check"
 
     override fun isSafe(request: HttpServletRequest): CsrfCheck.CheckResult {
@@ -31,7 +34,7 @@ class AADCSRFCheck(private val accessTokenValidator: AADAccessTokenValidator) : 
             return CsrfCheck.UNKNOWN
         }
 
-        if (URL(request.requestURL.toString()).path?.endsWith(URL_SUFFIX, ignoreCase = true) != true) {
+        if (URL(request.requestURL.toString()).path?.endsWith(callbackPathProvider.path, ignoreCase = true) != true) {
             return CsrfCheck.UNKNOWN
         }
 
@@ -58,6 +61,5 @@ class AADCSRFCheck(private val accessTokenValidator: AADAccessTokenValidator) : 
     companion object {
         val ACTION_METHODS = setOf("POST")
         val NONCE_PARAMETER = "nonce"
-        val URL_SUFFIX = "/overview.html"
     }
 }

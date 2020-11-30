@@ -31,9 +31,16 @@ object AADConstants {
     const val ALLOW_USER_DETAILS_SYNC = "allowUserDetailsSync"
     const val AUTH_PROMPT = "authPrompt"
     const val LOGIN_PATH = "/aadLogin.html"
+    const val OVERVIEW_PATH = "/overview.html"
+    const val DEDICATED_AUTH_PATH = "/aadAuth.html"
 
     const val ID_TOKEN = "id_token"
     const val NONCE_CLAIM = "nonce"
 
     val OID_USER_PROPERTY_KEY: PropertyKey = PluginPropertyKey(PluginTypes.AUTH_PLUGIN_TYPE, "azure-active-directory", "oid")
+
+    const val TTL_IN_MINUTES_PROPERTY = "teamcity.aad.token.ttl"
+
+    const val ENDPOINT_TYPE_PROPERTY = "teamcity.aad.endpoint.type"
+    const val DEDICATED_ENDPOINT_TYPE = "dedicated"
 }
