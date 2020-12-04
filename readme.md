@@ -22,9 +22,10 @@ Register a new [Azure Active Directory application](https://docs.microsoft.com/e
 | -                | -                              |
 | Application type | Web app / API                  |
 | Sign-on URL      | `%TEAMCITY_URL%/login.html`    |
-| Reply URLs       | `%TEAMCITY_URL%/overview.html` |
+| Redirect URIs    | `%TEAMCITY_URL%/overview.html` |
+|                  | `%TEAMCITY_URL%/aadAuth.html`  |
 
-Note: Reply URLs could be set in the application settings.
+Note: Redirect URIs could be set in the application settings (Authentication\Web).
 
 ### Configuring TeamCity server
 
@@ -35,6 +36,17 @@ Specify valid 'OAuth 2.0 authorization endpoint' and 'Application ID' retrieved 
 Note: The OAuth 2.0 authorization endpoint URL could be retrieved from the Endpoints available on the App registrations page in the Azure portal.
 
 After that the 'Log in using Azure Active Directory' link will be available on the Login page.
+
+#### Switching to the new UI
+After successful authentication browser will be redirected to '%TEAMCITY_URL%/overview.html' page by default.
+This prevents TeamCity from automatic switching to the new UI.
+
+To fix that:
+ 1. In the application setting on Azure portal add a new endpoint: `%TEAMCITY_URL%/aadAuth.html` to Redirect URIs list 
+ 2. Specify the [internal property](https://confluence.jetbrains.com/display/TCDL/Configuring+TeamCity+Server+Startup+Properties) `teamcity.aad.endpoint.type=dedicated`
+
+Property should be set after applying changes to Azure portal.
+No TeamCity server restart is requred.
 
 ### Known issues
 
