@@ -31,9 +31,9 @@ Note: Redirect URIs could be set in the application settings (Authentication\Web
 
 Add the 'Microsoft Azure Active Directory' HTTP authentication module to your [authentication configuration](http://confluence.jetbrains.com/display/TCDL/Configuring+Authentication+Settings).
 
-Specify valid 'OAuth 2.0 authorization endpoint' and 'Application ID' retrieved from the Azure Portal.
+Specify valid 'OAuth 2.0 authorization endpoint (v1)' and 'Application ID' retrieved from the Azure Portal.
 
-Note: The OAuth 2.0 authorization endpoint URL could be retrieved from the Endpoints available on the App registrations page in the Azure portal.
+Note: The OAuth 2.0 authorization endpoint URL could be retrieved from the Endpoints available on the App registrations page in the Azure portal. 'OAuth 2.0 authorization endpoint (v2)' is [currently unsupported](https://youtrack.jetbrains.com/issue/TW-66221)).
 
 After that the 'Log in using Azure Active Directory' link will be available on the Login page.
 
