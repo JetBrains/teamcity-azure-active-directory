@@ -20,8 +20,7 @@ Register a new [Azure Active Directory application](https://docs.microsoft.com/e
 
 | Parameter        | Value                          |
 | -                | -                              |
-| Application type | Web app / API                  |
-| Sign-on URL      | `%TEAMCITY_URL%/login.html`    |
+| Application type | Web                            |
 | Redirect URIs    | `%TEAMCITY_URL%/overview.html` |
 |                  | `%TEAMCITY_URL%/aadAuth.html`  |
 
