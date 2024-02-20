@@ -64,6 +64,14 @@ Possible solutions:
 * Use HTTPS for TeamCity server and specify it in the Azure AD application settings
 * For testing, you can specify the [internal property](https://confluence.jetbrains.com/display/TCDL/Configuring+TeamCity+Server+Startup+Properties) `rest.cors.origins=null` (**insecure, don't use it in production**)
 
+#### Authentication fails with HTTP 400: Failed to parse JWT
+
+If your AAD application has custom signing keys as a result of using the claims-mapping feature you may experience this error. 
+You may also find exception like _org.jose4j.lang.UnresolvableKeyException: Unable to find a suitable verification key for JWS w/ header_ in logfile `teamcity-winservice.log`. 
+Based on [Microsoft documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/access-tokens#validating-the-signature) you need to get custom JWT signing keys for validation.
+To achieve this you need to define [internal property](https://confluence.jetbrains.com/display/TCDL/Configuring+TeamCity+Server+Startup+Properties) `teamcity.aad.signingKeys.endpoint` with value of `https://login.microsoftonline.com/<tenant-id>/discovery/v2.0/keys?appid=<app-id>`.
+Please also ensure that your TeamCity server instance can reach out to the mentioned server.
+
 ## How it works?
 
 This plugin uses the [OAuth 2.0 OpenID Connect](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-openid-connect-code) authentication protocol and works as follows:

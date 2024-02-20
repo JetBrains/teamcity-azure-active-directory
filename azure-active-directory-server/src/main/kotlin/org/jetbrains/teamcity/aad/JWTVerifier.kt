@@ -3,13 +3,11 @@
 package org.jetbrains.teamcity.aad
 
 import jetbrains.buildServer.serverSide.TeamCityProperties
-import jetbrains.buildServer.util.StringUtil
 import org.jose4j.http.Get
 import org.jose4j.jwk.HttpsJwks
 import org.jose4j.jwt.JwtClaims
 import org.jose4j.jwt.consumer.JwtConsumerBuilder
 import org.jose4j.keys.resolvers.HttpsJwksVerificationKeyResolver
-import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.util.concurrent.atomic.AtomicReference
@@ -19,6 +17,7 @@ object JWTVerifier {
     private val TC_HTTPS_PROXY_PORT = "teamcity.https.proxyPort"
     private val HTTPS_PROXY_HOST = "https.proxyHost"
     private val HTTPS_PROXY_PORT = "https.proxyPort"
+    private val CUSTOM_JWT_SIGNING_KEYS_ENDPOINT = "teamcity.aad.signingKeys.endpoint"
 
     private val JWT_AAD_SIGNING_KEYS_ENDPOINT = "https://login.microsoftonline.com/fabrikamb2c.onmicrosoft.com/discovery/v2.0/keys"
     private val httpJwksHolder = AtomicReference<HttpsJwksHolder?>()
@@ -56,7 +55,7 @@ object JWTVerifier {
             } else {
                 HttpsJwksHolder(
                         proxyDescriptor,
-                        HttpsJwks(JWT_AAD_SIGNING_KEYS_ENDPOINT).also {
+                        HttpsJwks(getSigningKeysEndpoint()).also {
                             if (proxyDescriptor.proxyHost?.isNotBlank() ?: false) {
                                 it.setSimpleHttpGet(Get().also {
                                     it.setHttpProxy(Proxy(Proxy.Type.HTTP, InetSocketAddress(proxyHost, proxyPort)))
@@ -66,6 +65,10 @@ object JWTVerifier {
                 )
             }
         }!!.httpJwks
+    }
+
+    private fun getSigningKeysEndpoint(): String {
+        return TeamCityProperties.getProperty(CUSTOM_JWT_SIGNING_KEYS_ENDPOINT, JWT_AAD_SIGNING_KEYS_ENDPOINT)
     }
 
     private fun <T> getFirstTeamCityProperty(vararg propertyNames: String, getter: (String) -> T?): T? {
