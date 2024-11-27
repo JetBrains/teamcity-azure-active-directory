@@ -2,13 +2,17 @@
 
 package org.jetbrains.teamcity.aad
 
+import jetbrains.buildServer.serverSide.IOGuard
 import jetbrains.buildServer.serverSide.TeamCityProperties
+import jetbrains.buildServer.util.FuncThrow
 import jetbrains.buildServer.util.StringUtil
 import org.jose4j.http.Get
+import org.jose4j.http.SimpleResponse
 import org.jose4j.jwk.HttpsJwks
 import org.jose4j.jwt.JwtClaims
 import org.jose4j.jwt.consumer.JwtConsumerBuilder
 import org.jose4j.keys.resolvers.HttpsJwksVerificationKeyResolver
+import java.io.IOException
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Proxy
@@ -54,16 +58,15 @@ object JWTVerifier {
             if (it?.proxyDescriptor?.equals(proxyDescriptor) ?: false) {
                 it
             } else {
-                HttpsJwksHolder(
-                        proxyDescriptor,
-                        HttpsJwks(JWT_AAD_SIGNING_KEYS_ENDPOINT).also {
-                            if (proxyDescriptor.proxyHost?.isNotBlank() ?: false) {
-                                it.setSimpleHttpGet(Get().also {
-                                    it.setHttpProxy(Proxy(Proxy.Type.HTTP, InetSocketAddress(proxyHost, proxyPort)))
-                                })
-                            }
-                        }
-                )
+                val httpsJwks = HttpsJwks(JWT_AAD_SIGNING_KEYS_ENDPOINT)
+                val get = IOGuardWrapper(Get())
+                httpsJwks.setSimpleHttpGet(get)
+
+                if (proxyDescriptor.proxyHost?.isNotBlank() ?: false) {
+                    get.setHttpProxy(Proxy(Proxy.Type.HTTP, InetSocketAddress(proxyHost, proxyPort)))
+                }
+
+                HttpsJwksHolder(proxyDescriptor, httpsJwks)
             }
         }!!.httpJwks
     }
@@ -75,4 +78,11 @@ object JWTVerifier {
     private data class ProxyDescriptor(val proxyHost: String?, val proxyPort: Int?)
 
     private class HttpsJwksHolder(val proxyDescriptor: ProxyDescriptor, val httpJwks: HttpsJwks)
+
+    private class IOGuardWrapper(private val delegate: Get): Get() {
+        @Throws(IOException::class)
+        override fun get(location: String?): SimpleResponse? {
+            return IOGuard.allowNetworkCall(FuncThrow<SimpleResponse?, IOException> { delegate.get(location) })
+        }
+    }
 }
