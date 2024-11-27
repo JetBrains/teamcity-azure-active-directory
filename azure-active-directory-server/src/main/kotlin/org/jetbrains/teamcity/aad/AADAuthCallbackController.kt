@@ -19,6 +19,8 @@ class AADAuthCallbackController(
     }
 
     override fun doHandle(request: HttpServletRequest, response: HttpServletResponse): ModelAndView? {
-        return ModelAndView(RedirectView(rootUrlHolder.rootUrl))
+        val redirectUrl = request.getSession().getAttribute("URL_KEY") as String?
+        request.getSession().removeAttribute("URL_KEY")
+        return ModelAndView(RedirectView(redirectUrl ?: rootUrlHolder.rootUrl))
     }
 }
