@@ -13,7 +13,7 @@ class AADCSRFCheck(
         private val accessTokenValidator: AADAccessTokenValidator,
         private val callbackPathProvider: AADAuthCallbackPathProvider
 ) : CsrfCheck {
-    override fun describe(verbose: Boolean) = "Azure Active Directory Authentication plugin CSRF check"
+    override fun describe(verbose: Boolean) = "Microsoft Entra ID Authentication plugin CSRF check"
 
     override fun isSafe(request: HttpServletRequest): CsrfCheck.CheckResult {
         if (!ACTION_METHODS.contains(request.method)) {

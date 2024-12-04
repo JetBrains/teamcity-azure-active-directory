@@ -28,7 +28,7 @@ class ServerPrincipalFactory(private val myUserModel: UserModel) {
             val userWithTheSameEmail = findExistingUserByEmail(email)
             if (userWithTheSameEmail != null) {
                 val usernameFound = userWithTheSameEmail.username
-                LOG.info("Associated Azure AD user $userName with TeamCity user $usernameFound by e-mail $email")
+                LOG.info("Associated Microsoft Entra ID user $userName with TeamCity user $usernameFound by e-mail $email")
                 userWithTheSameEmail.setUserProperty(AADConstants.OID_USER_PROPERTY_KEY, aadUserUID)
                 if (allowUserDetailsSync(schemeProperties)) {
                     userWithTheSameEmail.updateUserAccount(userName, displayName, email)
