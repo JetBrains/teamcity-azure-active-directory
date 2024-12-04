@@ -3,4 +3,4 @@
 
 
 <c:set var="aadPath"><%=AADConstants.LOGIN_PATH%></c:set>
-<div><a href="<c:url value='${aadPath}'/>">Log in using Azure Active Directory</a></div>
+<div><a href="<c:url value='${aadPath}'/>">Log in using Microsoft Entra ID</a></div>

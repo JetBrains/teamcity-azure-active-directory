@@ -4,9 +4,9 @@
 <teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
   <info>
     <name>azure-active-directory</name>
-    <display-name>Microsoft Azure Active Directory Support</display-name>
+    <display-name>Microsoft Entra ID Support</display-name>
     <version>@Plugin_Version@</version>
-    <description>Allows using Microsoft Azure Active Directory for authentication in TeamCity</description>
+    <description>Allows using Microsoft Entra ID for authentication in TeamCity</description>
     <vendor>
       <name>JetBrains</name>
       <url>https://github.com/JetBrains/teamcity-azure-active-directory</url>

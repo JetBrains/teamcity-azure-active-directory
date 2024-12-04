@@ -15,7 +15,7 @@
     }
 </style>
 
-<c:set var="help"><a href="https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps"
+<c:set var="help"><a href="https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade/quickStartType~/null/sourceType/Microsoft_AAD_IAM"
                      target="_blank" showdiscardchangesmessage="false"><bs:helpIcon iconTitle=""/></a>
 </c:set>
 
@@ -30,7 +30,7 @@
         <td colspan="2">
             <props:checkboxProperty name="${params.allowUserDetailsSync}" uncheckedValue="false"/>
             <label for="${params.allowUserDetailsSync}">
-                Allow synchronization of user details with Azure AD when logging in
+                Allow synchronization of user details with Microsoft Entra ID when logging in
             </label>
         </td>
     </tr>
@@ -60,7 +60,7 @@
             <props:textProperty name="${params.applicationId}" className="longField" />
             <span class="error" id="error_${params.applicationId}"></span>
             <span class="grayNote">
-                Azure Active Directory application identifier. ${help}
+                Microsoft Entra ID application identifier. ${help}
             </span>
         </td>
     </tr>
@@ -73,7 +73,7 @@
                 <props:option value="consent">Consent</props:option>
             </props:selectProperty>
             <br/>
-            <span class="grayNote">The dialog type displayed while Azure AD authorization.</span>
+            <span class="grayNote">The dialog type displayed while Microsoft Entra ID authorization.</span>
         </td>
     </tr>
     </tbody>

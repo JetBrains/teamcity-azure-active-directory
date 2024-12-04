@@ -33,7 +33,7 @@ class AADAuthenticationScheme(loginConfiguration: LoginConfiguration,
 
     override fun doGetName() = AADConstants.AAD_AUTH_SCHEME_NAME
 
-    override fun getDisplayName() = "Microsoft Azure Active Directory"
+    override fun getDisplayName() = "Microsoft Entra ID"
 
     override fun getDescription() = "Single sign-on via $displayName"
 
