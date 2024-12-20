@@ -18,12 +18,10 @@ The plugin is compatible with TeamCity server 10.0+
 
 Register a [new application with the Microsoft identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate#adding-an-application) for your TeamCity server with the following parameters:
 
-| Parameter        | Value                          |
-| -                | -                              |
-| Application type | Web                            |
-| Redirect URIs    | `%TEAMCITY_URL%/overview.html` |
-|                  | `%TEAMCITY_URL%/aadAuth.html`  |
-
+| Parameter        | Value                                     |
+| -                |-------------------------------------------|
+| Application type | Web                                       |
+| Redirect URIs    | `%TEAMCITY_URL%/aadAuth.html`             |
 After app registration go to the Authentication tab and select a checkbox `ID tokens (used for implicit and hybrid flows)`
 under `Implicit grant and hybrid flows` section
 
@@ -38,17 +36,6 @@ Specify valid 'OAuth 2.0 authorization endpoint (v1)' and 'Application ID' retri
 Note: The OAuth 2.0 authorization endpoint URL could be retrieved from the Endpoints available on the App registrations page in the Microsoft Entra admin center. 'OAuth 2.0 authorization endpoint (v2)' is [currently unsupported](https://youtrack.jetbrains.com/issue/TW-66221).
 
 After that the 'Log in using Microsoft Entra ID' link will be available on the Login page.
-
-#### Switching to the new UI
-After successful authentication browser will be redirected to '%TEAMCITY_URL%/overview.html' page by default.
-This prevents TeamCity from automatic switching to the new UI.
-
-To fix that:
- 1. In the application settings in the Microsoft Entra admin center add a new endpoint: `%TEAMCITY_URL%/aadAuth.html` to Redirect URIs list 
- 2. Specify the [internal property](https://confluence.jetbrains.com/display/TCDL/Configuring+TeamCity+Server+Startup+Properties) `teamcity.aad.endpoint.type=dedicated`
-
-Property should be set after applying changes to the app in the Microsoft Entra admin center.
-No TeamCity server restart is required.
 
 ### Known issues
 
