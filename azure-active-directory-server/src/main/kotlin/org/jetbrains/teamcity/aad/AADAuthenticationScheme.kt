@@ -64,6 +64,10 @@ class AADAuthenticationScheme(loginConfiguration: LoginConfiguration,
             return HttpAuthenticationResult.notApplicable()
         }
 
+        var uniqueNameClaimName = UNIQUE_NAME_CLAIM
+        if (schemeProperties[AADConstants.AUTH_ENDPOINT_SCHEME_PROPERTY_KEY]?.contains("v2.0") == true)
+            uniqueNameClaimName = UPN_CLAIM
+
         val idTokenString = request.getParameter(ID_TOKEN)
         if (idTokenString == null) {
             LOG.debug("POST request contains no $ID_TOKEN parameter so scheme is not applicable.")
@@ -81,15 +85,15 @@ class AADAuthenticationScheme(loginConfiguration: LoginConfiguration,
         }
 
         val nonce = token.getClaim(NONCE_CLAIM)
-        val uniqueName = token.getClaim(UNIQUE_NAME_CLAIM)
+        val uniqueName = token.getClaim(uniqueNameClaimName)
         val oid = token.getClaim(OID_CLAIM)
 
         if (nonce == null || uniqueName == null || oid == null) {
-            return sendBadRequest(response, "Some of required claims were not found in parsed JWT. nonce - $nonce; name - $uniqueName, oid - $oid")
+            return sendBadRequest(response, "Some of required claims were not found in parsed JWT. $NONCE_CLAIM - $nonce; $uniqueNameClaimName - $uniqueName, $OID_CLAIM - $oid")
         }
 
         if (!accessTokenValidator.validate(nonce)) {
-            return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT 'nonce' claim is incorrect.")
+            return sendBadRequest(response, "Marked request as unauthenticated since retrieved JWT '$NONCE_CLAIM' claim is incorrect.")
         }
 
         // Get e-mail
