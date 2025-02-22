@@ -37,7 +37,7 @@ class LoginViaAADController(webManager: WebControllerManager,
         val requestUrl = StringBuilder("$endpoint$separator")
                 .append("response_type=id_token")
                 .append("&client_id=$clientId")
-                .append("&scope=openid")
+                .append("&scope=openid profile")
                 .append("&nonce=$nonce")
                 .append("&response_mode=form_post")
                 .apply {
