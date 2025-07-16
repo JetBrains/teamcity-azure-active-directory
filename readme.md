@@ -16,26 +16,22 @@ The plugin is compatible with TeamCity server 10.0+
 
 ### Configuring Microsoft Entra ID
 
-Register a [new application with the Microsoft identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate#adding-an-application) for your TeamCity server with the following parameters:
-
-| Parameter        | Value                                     |
-| -                |-------------------------------------------|
-| Application type | Web                                       |
-| Redirect URIs    | `%TEAMCITY_URL%/aadAuth.html`             |
-After app registration go to the Authentication tab and select a checkbox `ID tokens (used for implicit and hybrid flows)`
-under `Implicit grant and hybrid flows` section
-
-Note: Redirect URIs could be set in the application settings (Authentication\Web).
+1. [Register an application in Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app). In the **Redirect URI (optional)** section, set:
+    - **Platform:** `Web`
+    - **Redirect URI:** `%TEAMCITY_URL%/aadAuth.html` (where `%TEAMCITY_URL%` is the base URL of your TeamCity server)
+2. Once the application is registered, open its **Authentication** tab. Under **Implicit grant and hybrid flows**, select **ID tokens (used for implicit and hybrid flows)**.
+3. *(Optional)* Add more redirect URIs in the application settings | **Authentication** | **Web**, if needed.
 
 ### Configuring TeamCity server
 
-Add the 'Microsoft Entra ID' HTTP authentication module to your [authentication configuration](http://confluence.jetbrains.com/display/TCDL/Configuring+Authentication+Settings).
+1. Add the **Microsoft Entra ID** authentication module in TeamCity [Authentication settings](https://www.jetbrains.com/help/teamcity/configuring-authentication-settings.html).
+2. Enter the **Application (client) ID** from the application page in Microsoft Entra admin center.
+3. Copy the **OAuth 2.0 authorization endpoint (v1)** URL from **Endpoints** on the App registrations page in the Microsoft Entra admin center, and paste it into the **Endpoint URL** field.
 
-Specify valid 'OAuth 2.0 authorization endpoint (v1)' and 'Application ID' retrieved from the Microsoft Entra admin center.
+> [!NOTE]  
+> The **OAuth 2.0 authorization endpoint (v2)** is [currently unsupported](https://youtrack.jetbrains.com/issue/TW-66221).
 
-Note: The OAuth 2.0 authorization endpoint URL could be retrieved from the Endpoints available on the App registrations page in the Microsoft Entra admin center. 'OAuth 2.0 authorization endpoint (v2)' is [currently unsupported](https://youtrack.jetbrains.com/issue/TW-66221).
-
-After that the 'Log in using Microsoft Entra ID' link will be available on the Login page.
+After completing these steps, the **Log in using Microsoft Entra ID** link will appear on the TeamCity login page.
 
 ### Known issues
 
