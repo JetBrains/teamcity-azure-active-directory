@@ -33,14 +33,13 @@ The plugin is compatible with TeamCity server 10.0+
 
 After completing these steps, the **Log in using Microsoft Entra ID** link will appear on the TeamCity login page.
 
-### Known issues
+## Known issues
 
-#### Authentication fails with HTTP 403: Origin https://login.microsoftonline.com
+### Authentication fails with HTTP 403: Origin https://login.microsoftonline.com
 
 To fix that, specify the [internal property](https://confluence.jetbrains.com/display/TCDL/Configuring+TeamCity+Server+Startup+Properties) `rest.cors.origins=https://login.microsoftonline.com`
 
-#### Authentication fails with HTTP 403: Origin null
-
+### Authentication fails with HTTP 403: Origin null
 
 > 403 Forbidden: Responding with 403 status code due to failed CSRF check: request's "Origin" header value "null" does not match Host/X-Forwarded-Host header values or server's CORS-trusted hosts, consider adding "Origin: %TEAMCITY_URL%" header.
 
