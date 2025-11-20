@@ -1,7 +1,7 @@
 
 
 plugins {
-    id 'com.github.rodm.teamcity-server' version "1.0"
+    id 'io.github.rodm.teamcity-server' version "1.5"
 }
 
 teamcity {
@@ -13,18 +13,15 @@ teamcity {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
-    compile('org.bitbucket.b_c:jose4j:0.6.2') {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation('org.bitbucket.b_c:jose4j:0.9.4') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    provided "org.jetbrains.teamcity:server-api:$teamcityVersion"
-    provided "org.jetbrains.teamcity:server-web-api:$teamcityVersion"
-    provided "org.jetbrains.teamcity.internal:server:$teamcityVersion"
-    testCompile "org.jetbrains.teamcity:tests-support:$teamcityVersion"
+    compileOnly "org.jetbrains.teamcity:server-api:$teamcityVersion"
+    compileOnly "org.jetbrains.teamcity:server-web-api:$teamcityVersion"
+    compileOnly "org.jetbrains.teamcity.internal:server:$teamcityVersion"
+    testImplementation "org.jetbrains.teamcity:tests-support:$teamcityVersion"
 }
 
 serverPlugin.version = null
 serverPlugin.baseName = projectIds.artifact
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
