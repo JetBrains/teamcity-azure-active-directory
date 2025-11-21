@@ -26,10 +26,7 @@ The plugin is compatible with TeamCity server 10.0+
 
 1. Add the **Microsoft Entra ID** authentication module in TeamCity [Authentication settings](https://www.jetbrains.com/help/teamcity/configuring-authentication-settings.html).
 2. Enter the **Application (client) ID** from the application page in Microsoft Entra admin center.
-3. Copy the **OAuth 2.0 authorization endpoint (v1)** URL from **Endpoints** on the App registrations page in the Microsoft Entra admin center, and paste it into the **Endpoint URL** field.
-
-> [!NOTE]  
-> The **OAuth 2.0 authorization endpoint (v2)** is [currently unsupported](https://youtrack.jetbrains.com/issue/TW-66221).
+3. Copy the **OAuth 2.0 authorization endpoint (v2)** URL from **Endpoints** on the App registrations page in the Microsoft Entra admin center, and paste it into the **Endpoint URL** field.
 
 After completing these steps, the **Log in using Microsoft Entra ID** link will appear on the TeamCity login page.
 
